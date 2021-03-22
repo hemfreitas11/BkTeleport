@@ -1,0 +1,211 @@
+#    __________       _____    ____
+#    |         \      |   |   /   /
+#    |    |     |     |   |  /   /
+#    |    |     |     |   | /   /      ____  ____
+#    |         /      |   |/   /       |  |_/  __\
+#    |         \      |       \        |   ___/
+#    |    |     |     |   |\   \       |  |
+#    |    |     |     |   | \   \      |  |        ______________
+#    |         /      |   |  \   \     |  |        |             |
+#
+
+# This is where you can customize the commands of the plugin, their descriptions and usages in the help command
+# *-------------------*=/[Commands]\=*------------------*
+commands:
+
+  # Here you can change how the help message of the plugin will look like
+  help-format:
+    header: '&7*----------------*=/[&2&lBkTeleport&7]\=*----------------*'
+    help-section: '&7- &a{command} &f- &7{description}'
+    footer: '&7*-----------------*=[&aMade by: Bkr__&7]=*---------------*'
+
+  # Message when a player sends an incorrect usage of the command
+  usage-format: '&cUsage: {usage}'
+
+  #BkTeleport Command
+  bkteleport:
+    command: 'bkteleport'
+    description: 'Shows the help of the plugin.'
+    usage: '/bkteleport'
+
+  #Tpa Command
+  tpa:
+    command: 'tpa'
+    description: 'Sends a teleport request to another player.'
+    usage: '/tpa <player>'
+
+  #TpaHere Command
+  tpahere:
+    command: 'tpahere'
+    description: 'Asks another player to teleport to you.'
+    usage: '/tpahere <player>'
+
+  #TpAccept Command
+  tpaccept:
+    command: 'tpaccept'
+    description: 'Accepts a teleport request.'
+    usage: '/tpaccept <player>'
+
+  #TpDeny Command
+  tpdeny:
+    command: 'tpdeny'
+    description: 'Declines a teleport request.'
+    usage: '/tpdeny <player>'
+
+  #Home Command
+  home:
+    command: 'home'
+    description: 'Teleports to your home.'
+    usage: '/home <home-name>'
+
+  #Homes Command
+  homes:
+    command: 'homes'
+    description: 'Shows a list of your homes.'
+    usage: '/homes'
+
+  #SetHome Command
+  sethome:
+    command: 'sethome'
+    description: 'Sets a home.'
+    usage: '/sethome <home-name>'
+
+  #DelHome Command
+  delhome:
+    command: 'delhome'
+    description: 'Deletes one of your homes.'
+    usage: '/delhome <home-name>'
+
+  #Warp Command
+  warp:
+    command: 'warp'
+    description: 'Teleports to a warp.'
+    usage: '/warp <warp-name>'
+
+  #Warps Command
+  warps:
+    command: 'warps'
+    description: 'Shows a list of warps.'
+    usage: '/warps'
+
+  #SetWarp Command
+  setwarp:
+    command: 'setwarp'
+    description: 'Sets a warp.'
+    usage: '/setwarp <warp-name>'
+
+  #DelWarp Command
+  delwarp:
+    command: 'delwarp'
+    description: 'Deletes a warp.'
+    usage: '/delwarp <warp-name>'
+# *-----------------------*=[|]=*-----------------------*
+
+
+# Here you can change all the messages in the plugin
+# To remove the blank spaces simply change the message from ' ' to ''
+# *-----------------*=/[Info Messages]\=*---------------*
+info:
+  tpa-message:
+    accept-button: '&2&l[HERE]'
+    deny-button: '&c&l[HERE]'
+    accept-hover: '&2Click to accept.'
+    deny-hover: '&cClick to deny.'
+    line1: ' '
+    line2: '&a*--------------------*=/[|]\=*--------------------*'
+    line3: ' '
+    message1: '&aThe player &a&l{player} &awants to teleport to you.'
+    line4: ' '
+    message2: '&aClick {accept-button} &ato accept or click {deny-button} &ato deny.'
+    line5: ' '
+    message3: '&aThe teleport request will expire in &2{seconds} &aseconds.'
+    line6: ' '
+    line7: '&a*-----------------------------------------------*'
+    line8: ' '
+  tpahere-message:
+    accept-button: '&2&l[HERE]'
+    deny-button: '&c&l[HERE]'
+    accept-hover: '&2Click to accept.'
+    deny-hover: '&cClick to deny.'
+    line1: ' '
+    line2: '&e*--------------------*=/[|]\=*--------------------*'
+    line3: ' '
+    message1: '&eThe player &6&l{player} &ewants you to go to him.'
+    line4: ' '
+    message2: '&eClick {accept-button} &eto accept or click {deny-button} &eto deny.'
+    line5: ' '
+    message3: '&eThe teleport request will expire in &6{seconds} &eseconds.'
+    line6: ' '
+    line7: '&e*-----------------------------------------------*'
+    line8: ' '
+  spying: '&5&oSpying: {player}'
+  invulnerable-remaining: '&cInvulnerable for {seconds} seconds'
+  home-list-title: '&8&lHomes'
+  warp-list-title: '&8&lWarps'
+  home-set: '&aHome &2{home-name} &asuccessfully set.'
+  time-remaining: '&7Teleporting in &a{seconds}'
+  config-reloaded: '&aConfig and messages successfully reloaded.'
+  return-name: '&c&lReturn'
+  return-desc: '&4Return to the previous page.'
+  next-name: '&2&lNext'
+  next-desc: '&aGo to the next page.'
+  sent-invite: '&aYou sent a teleport request to &2{player}.'
+  invite-accepted: '&aTeleport request to &2{player} &aaccepted.'
+  invite-accepted-self: '&aTeleport request from &2{player} &aaccepted.'
+  invite-denied: '&cTeleport request from &4{player} &cdeclined.'
+  home-deleted: '&aHome removed.'
+  warp-deleted: '&aWarp removed.'
+  home-list:
+    home-format: '&a&n{home}'
+    start: '&2Homes: '
+    separator: '&2, '
+    end: '&2.'
+    hover: '&aClick here to go to this home.'
+  warp-list:
+    warp-format: '&a&n{warp}'
+    start: '&2Warps: '
+    separator: '&2, '
+    end: '&2.'
+    hover: '&aClick here to go to this warp.'
+  warp-set:
+    title: '&aWarp &2{warp-name}'
+    subtitle: '&asuccessfully set.'
+  warped:
+    title: '&aYou teleported to'
+    subtitle: '&2{player}'
+# *-----------------------*=[|]=*-----------------------*
+
+
+# *----------------*=/[Error Messages]\=*---------------*
+error:
+  max-warps-reached: '&cYou hit the max number of warps.'
+  wrong-spy-format: '&cExample: /home BeccarMT:diamond'
+  home-limit: '&cYou hit your limit of &4{max-homes} &chomes.'
+  player-not-found: '&cThe player &4{player} &cwas not found.'
+  no-player-specified: '&cYou must specify the name of the player that you want to accept/deny the request from.'
+  not-online: '&cThe player &4{player} &cis not online.'
+  no-permission: '&cYou dont have permission to do that.'
+  unknown-home-spy: '&cThe player &4{player} &cdoesn''t have a home with the name &4{home-name}&c.'
+  unknown-warp: '&cThe warp &4{warp-name} &cdoesn''t exist.'
+  unknown-home: '&cThe home &4{home-name} &cdoesn''t exist.'
+  no-homes: '&eYou don''t have any homes. Type /sethome <name> to set one.'
+  homes-not-found: '&cThe homes of the player &4{player} &cwere not found.'
+  no-home-spy: '&cThis player doesn''t have any homes.'
+  no-warps: '&eThe server didnt set any warps yet.'
+  other-already-waiting: '&cThe player &4{player} &cis already waiting a teleport. Request canceled.'
+  already-waiting: '&cYou are already waiting a teleport.'
+  no-pending-invite: '&cThis teleport request doesn''t exist anymore.'
+  invite-denied: '&cYour teleport request to &4{player} &cwas declined.'
+  cant-invite-self: '&cYou cant send a teleport request to yourself.'
+  cant-invite-again: '&cYou already sent a request to this player.'
+  invite-expired: '&cThe teleport request from &4{player} &chas expired.'
+  invite-expired-self: '&cThe teleport request to &4{player} &chas expired.'
+  cant-attack-now:
+    self: '&cYou can''t attack for {seconds} more seconds!'
+    others: '&cThis player can''t be attacked for {seconds} more seconds!'
+  warp-canceled-title: '&cTeleport canceled.'
+  warp-canceled-cause:
+    dealt-damage: '&cYou attacked.'
+    took-damage: '&cYou took damage.'
+    moved: '&cYou moved.'
+# *-----------------------*=[|]=*-----------------------*
