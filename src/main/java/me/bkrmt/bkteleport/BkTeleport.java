@@ -35,8 +35,9 @@ public final class BkTeleport extends BkPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        start(true)
-                .addCommand(new CommandModule(new HelpCmd(plugin, "bkteleport", ""), (a, b, c, d) -> Collections.singletonList("")))
+        start(true);
+        setRunning(true);
+        getCommandMapper().addCommand(new CommandModule(new HelpCmd(plugin, "bkteleport", ""), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new TpaCmd(plugin, "tpa", "bkteleport.tpa"), null))
                 .addCommand(new CommandModule(new TpaHereCmd(plugin, "tpahere", "bkteleport.tpahere"), null))
                 .addCommand(new CommandModule(new TpaAcceptCmd(plugin, "tpaccept", "bkteleport.tpaccept"), null))
