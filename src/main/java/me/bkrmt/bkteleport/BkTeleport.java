@@ -100,7 +100,7 @@ public final class BkTeleport extends BkPlugin {
                         File destFile = (new File(getDataFolder().getPath() + File.separator + essFolderName + File.separator + file.getName()));
                         if (!destFile.exists()) {
                             if (!warned) {
-                                String infoMessage = destFile.getPath().contains("userdata") ? InternalMessages.ESSCOPYHOME.getMessage().replace("{0}", getName()) : InternalMessages.ESSCOPYWARPS.getMessage().replace("{0}", getName());
+                                String infoMessage = destFile.getPath().contains("userdata") ? InternalMessages.ESS_COPY_HOME.getMessage().replace("{0}", getName()) : InternalMessages.ESS_COPY_WARPS.getMessage().replace("{0}", getName());
                                 getServer().getLogger().log(Level.INFO, infoMessage);
                                 warned = true;
                             }
@@ -110,7 +110,7 @@ public final class BkTeleport extends BkPlugin {
                         e.printStackTrace();
                     }
                 }
-                if (warned) getServer().getLogger().log(Level.INFO, InternalMessages.ESSCOPYDONE.getMessage().replace("{0}", getName()));
+                if (warned) getServer().getLogger().log(Level.INFO, InternalMessages.ESS_COPY_DONE.getMessage().replace("{0}", getName()));
             }
         }
     }
