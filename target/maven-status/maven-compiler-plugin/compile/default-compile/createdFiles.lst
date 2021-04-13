@@ -15,6 +15,7 @@ me\bkrmt\bkteleport\TpaUtils$1.class
 me\bkrmt\bkteleport\commands\tp\TpaCmd.class
 me\bkrmt\bkteleport\commands\home\DelHomeCmd.class
 me\bkrmt\bkteleport\BkTeleport.class
+me\bkrmt\bkteleport\BkRunnable.class
 me\bkrmt\bkteleport\commands\home\HomeCmd.class
 me\bkrmt\bkteleport\commands\tp\TpaDenyCmd.class
 me\bkrmt\bkteleport\commands\warp\DelWarpCmd.class
