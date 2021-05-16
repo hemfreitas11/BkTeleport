@@ -101,7 +101,6 @@ commands:
     usage: '/delwarp <warp-name>'
 # *-----------------------*=[|]=*-----------------------*
 
-
 # Here you can change all the messages in the plugin
 # To remove the blank spaces simply change the message from ' ' to ''
 # *-----------------*=/[Info Messages]\=*---------------*
