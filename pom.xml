@@ -6,7 +6,7 @@
 
     <groupId>me.bkrmt</groupId>
     <artifactId>bkteleport</artifactId>
-    <version>2.7.4</version>
+    <version>2.7.5</version>
     <packaging>jar</packaging>
 
     <name>BkTeleport</name>
@@ -30,7 +30,6 @@
             <id>maven-central</id>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
-
     </repositories>
 
     <build>
@@ -86,6 +85,10 @@
                                 <relocation>
                                     <pattern>me.bkrmt.nms</pattern>
                                     <shadedPattern>me.bkrmt.${project.artifactId}.nms</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.github.bananapuncher714.nbteditor</pattern>
+                                    <shadedPattern>me.bkrmt.${project.artifactId}.bkcore.nbteditor</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

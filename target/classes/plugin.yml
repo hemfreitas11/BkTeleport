@@ -1,5 +1,5 @@
 name: BkTeleport
-version: 2.7.4
+version: 2.7.5
 main: me.bkrmt.bkteleport.BkTeleport
 api-version: 1.13
 authors: [Bkr__]
