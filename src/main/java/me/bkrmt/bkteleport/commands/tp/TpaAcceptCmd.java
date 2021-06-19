@@ -46,7 +46,7 @@ public class TpaAcceptCmd extends Executor {
             if (!replyEvent.isCancelled()) {
                 if (type != null) {
                     if (inviter != null) {
-                        if (TeleportCore.playersInCooldown.get(inviter.getName()) == null) {
+                        if (TeleportCore.INSTANCE.getPlayersInCooldown().get(inviter.getName()) == null) {
                             inviter.sendMessage(getPlugin().getLangFile().get("info.invite-accepted").replace("{player}", sender.getName()));
                             sender.sendMessage(getPlugin().getLangFile().get("info.invite-accepted-self").replace("{player}", inviter.getName()));
 
@@ -86,7 +86,7 @@ public class TpaAcceptCmd extends Executor {
                 RequestType type = BkTeleport.isExpiring(name.toLowerCase(), sender.getName().toLowerCase());
                 if (type != null) {
                     if (inviter != null) {
-                        if (TeleportCore.playersInCooldown.get(inviter.getName()) == null) {
+                        if (TeleportTeleportCore.INSTANCE.getPlayersInCooldown().get(inviter.getName()) == null) {
                             inviter.sendMessage(getPlugin().getLangFile().get("info.invite-accepted", sender.getName()));
                             sender.sendMessage(getPlugin().getLangFile().get("info.invite-accepted-self", inviter.getName()));
 

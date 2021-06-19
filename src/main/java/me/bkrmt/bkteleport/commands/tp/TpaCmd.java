@@ -24,7 +24,7 @@ public class TpaCmd extends Executor {
         } else {
             if (args.length == 1) {
                 if (!(getPlugin().getServer().getPlayer(args[0]) == null)) {
-                    if (TeleportCore.playersInCooldown.get(sender.getName()) == null) {
+                    if (TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName()) == null) {
                         Player senderPlayer = ((Player) sender);
                         Player targetPlayer = getPlugin().getServer().getPlayer(args[0]);
                         if (!senderPlayer.equals(targetPlayer)) {

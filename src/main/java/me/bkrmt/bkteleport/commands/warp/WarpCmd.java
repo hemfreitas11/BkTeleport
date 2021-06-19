@@ -74,7 +74,7 @@ public class WarpCmd extends Executor {
             sender.sendMessage(getPlugin().getLangFile().get("error.unknown-warp").replace("{warp-name}", args[0]));
         } else {
             if (!checkPermission || (sender.hasPermission("bkteleport.warp." + args[0].toLowerCase()) || sender.hasPermission("bkteleport.warp.*"))) {
-                if (TeleportCore.playersInCooldown.get(sender.getName()) == null) {
+                if (TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName()) == null) {
                     new Teleport(getPlugin(), sender, args[0], TeleportType.Warp);
                 } else {
                     sender.sendMessage(getPlugin().getLangFile().get("error.already-waiting"));

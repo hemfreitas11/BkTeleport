@@ -80,7 +80,7 @@ public class HomeCmd extends Executor {
                 } else {
                     Configuration configFile = getPlugin().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
                     if (configFile.get("homes." + args[0]) != null) {
-                        if (TeleportCore.playersInCooldown.get(sender.getName()) == null || !TeleportCore.playersInCooldown.get(sender.getName())) {
+                        if (TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName()) == null || !TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName())) {
                             new Teleport(getPlugin(), sender, args[0], TeleportType.Home);
                         } else {
                             sender.sendMessage(getPlugin().getLangFile().get("error.already-waiting"));
