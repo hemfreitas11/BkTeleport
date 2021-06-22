@@ -86,10 +86,10 @@ public class WarpCmd extends Executor {
     }
 
     private void sendWarps(Player sender) {
-        if (plugin.getConfig().getBoolean("custom-warps-list-command.enabled")) {
+        if (plugin.getConfigManager().getConfig().getBoolean("custom-warps-list-command.enabled")) {
             plugin.getServer().getPluginManager().callEvent(
                     new PlayerCommandPreprocessEvent(
-                            sender, plugin.getConfig().getString("custom-warps-list-command.command")
+                            sender, plugin.getConfigManager().getConfig().getString("custom-warps-list-command.command")
                     )
             );
         } else {
@@ -110,7 +110,7 @@ public class WarpCmd extends Executor {
 
                 int warpAmount = keys.length;
                 if (warpAmount > 0) {
-                    if (getPlugin().getConfig().getBoolean("warp-gui")) {
+                    if (getPlugin().getConfigManager().getConfig().getBoolean("warp-gui")) {
                         Inventory warpsMenu = getPlugin().getServer().createInventory
                                 (
                                         null,

@@ -28,6 +28,12 @@ commands:
     description: 'Shows the help of the plugin.'
     usage: '/bkteleport'
 
+  #Reload Command
+  tpreload:
+    command: 'tpreload'
+    description: 'Updates all the configs and messages of the plugin.'
+    usage: '/tpreload'
+
   #Tpa Command
   tpa:
     command: 'tpa'
@@ -137,6 +143,7 @@ info:
     line6: ' '
     line7: '&e*-----------------------------------------------*'
     line8: ' '
+  configs-reloaded: '&aAll the configs and messages have been reloaded!'
   spying: '&5&oSpying: {player}'
   invulnerable-remaining: '&cInvulnerable for {seconds} seconds'
   home-list-title: '&8&lHomes'

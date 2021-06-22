@@ -3,6 +3,7 @@ package me.bkrmt.bkteleport;
 import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.command.CommandModule;
 import me.bkrmt.bkcore.command.HelpCmd;
+import me.bkrmt.bkcore.command.ReloadCmd;
 import me.bkrmt.bkcore.config.Configuration;
 import me.bkrmt.bkcore.message.InternalMessages;
 import me.bkrmt.bkteleport.commands.CommandHandler;
@@ -37,7 +38,9 @@ public final class BkTeleport extends BkPlugin {
         plugin = this;
         start(true);
         setRunning(true);
-        getCommandMapper().addCommand(new CommandModule(new HelpCmd(plugin, "bkteleport", ""), (a, b, c, d) -> Collections.singletonList("")))
+        getCommandMapper()
+                .addCommand(new CommandModule(new HelpCmd(plugin, "bkteleport", ""), (a, b, c, d) -> Collections.singletonList("")))
+                .addCommand(new CommandModule(new ReloadCmd(plugin, "tpreload", "bkteleport.reload"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new TpaCmd(plugin, "tpa", "bkteleport.tpa"), null))
                 .addCommand(new CommandModule(new TpaHereCmd(plugin, "tpahere", "bkteleport.tpahere"), null))
                 .addCommand(new CommandModule(new TpaAcceptCmd(plugin, "tpaccept", "bkteleport.tpaccept"), null))
@@ -51,7 +54,7 @@ public final class BkTeleport extends BkPlugin {
                 .addCommand(new CommandModule(new SetWarpCmd(plugin, "setwarp", "bkteleport.setwarp"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new DelWarpCmd(plugin, "delwarp", "bkteleport.delwarp"), (sender, b, c, args) -> warpsTabCompleter(args, sender)))
                 .registerAll();
-        getConfig();
+
         commands = new Hashtable<>();
         commands.put("tpa", PluginUtils.getList("commands.tpa"));
         commands.put("tpahere", PluginUtils.getList("commands.tpahere"));
@@ -81,11 +84,16 @@ public final class BkTeleport extends BkPlugin {
             TeleportCore.INSTANCE.start(this);
         }
 
-        if (getConfig().getBoolean("import-from-essentials")) {
+        if (getConfigManager().getConfig().getBoolean("import-from-essentials")) {
             copyFromEss("warps");
             copyFromEss("userdata");
         }
 
+    }
+
+    @Override
+    public void onDisable() {
+        getConfigManager().saveConfigs();
     }
 
     private void copyFromEss(String essFolderName) {

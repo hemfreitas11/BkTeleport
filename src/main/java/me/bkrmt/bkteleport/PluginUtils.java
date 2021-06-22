@@ -24,7 +24,7 @@ import static me.bkrmt.bkteleport.BkTeleport.plugin;
 public class PluginUtils {
 
     public static List<String> getList(String name) {
-        String[] temp = Utils.objectToString(plugin.getConfig().getStringList(name).toArray());
+        String[] temp = Utils.objectToString(plugin.getConfigManager().getConfig().getStringList(name).toArray());
         List<String> returnValue = new ArrayList<>();
         for (String temp2 : temp) {
             returnValue.add(temp2.replace("-", ":"));
@@ -36,7 +36,7 @@ public class PluginUtils {
         String[] returnValue = new String[]{""};
 
         if (plugin.getFile("userdata", player.getUniqueId().toString() + ".yml").exists()) {
-            Configuration playerConfig = plugin.getConfig("userdata", player.getUniqueId().toString() + ".yml");
+            Configuration playerConfig = plugin.getConfigManager().getConfig("userdata", player.getUniqueId().toString() + ".yml");
             if (playerConfig.getConfigurationSection("homes") != null) {
                 ConfigurationSection section = playerConfig.getConfigurationSection("homes");
                 if (section.getKeys(false).size() > 0) {
@@ -67,7 +67,7 @@ public class PluginUtils {
         String noHomeKey = type.equals(UserType.User) ? "error.no-homes" : "error.no-home-spy";
 
         if (sendHomesFile.exists()) {
-            Configuration sendHomes = plugin.getConfig("userdata", sendHomesFile.getName());
+            Configuration sendHomes = plugin.getConfigManager().getConfig("userdata", sendHomesFile.getName());
             if (sendHomes.getConfigurationSection("homes") != null) {
                 ConfigurationSection section = sendHomes.getConfigurationSection("homes");
                 if (section.getKeys(false).size() > 0 && section.getKeys(false).size() != 1) {
@@ -101,7 +101,7 @@ public class PluginUtils {
         String[] keys = Utils.objectToString(section.getKeys(false).toArray());
         int homeAmount = keys.length;
 
-        if (plugin.getConfig().getBoolean("home-gui")) {
+        if (plugin.getConfigManager().getConfig().getBoolean("home-gui")) {
             Inventory homesMenu = plugin.getServer().createInventory
                     (
                             null,

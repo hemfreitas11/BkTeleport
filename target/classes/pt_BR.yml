@@ -28,6 +28,12 @@ commands:
     description: 'Mostra a ajuda do plugin.'
     usage: '/bkteleporte'
 
+  #Comando Atualizar
+  tpreload:
+    command: 'tpatualizar'
+    description: 'Atualiza as configuracoes e mensagens do plugin.'
+    usage: '/tpatualizar'
+
   #Comando Tpa
   tpa:
     command: 'tpa'
@@ -138,6 +144,7 @@ info:
     line6: ' '
     line7: '&e*-----------------------------------------------*'
     line8: ' '
+  configs-reloaded: '&aTodas as configuracoes e mensagens foram recarregadas!'
   spying: '&5&oEspiando: {player}'
   invulnerable-remaining: '&cInvulneravel por {seconds} segundos'
   home-list-title: '&8&lCasas'

@@ -57,7 +57,7 @@ public class HomeCmd extends Executor {
                     }
                     if (spy.length == 2) {
                         if (getPlugin().getFile("userdata", spiedFile).exists()) {
-                            Configuration spyConfigFile = getPlugin().getConfig("userdata", spiedFile);
+                            Configuration spyConfigFile = getPlugin().getConfigManager().getConfig("userdata", spiedFile);
                             if (spyConfigFile.get("homes." + spy[1]) != null) {
                                 ((Player) sender).teleport(spyConfigFile.getLocation("homes." + spy[1]));
                             } else {
@@ -78,7 +78,7 @@ public class HomeCmd extends Executor {
                 if (!getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml").exists()) {
                     sender.sendMessage(getPlugin().getLangFile().get("error.unknown-home").replace("{home-name}", args[0]));
                 } else {
-                    Configuration configFile = getPlugin().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
+                    Configuration configFile = getPlugin().getConfigManager().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
                     if (configFile.get("homes." + args[0]) != null) {
                         if (TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName()) == null || !TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName())) {
                             new Teleport(getPlugin(), sender, args[0], TeleportType.Home);

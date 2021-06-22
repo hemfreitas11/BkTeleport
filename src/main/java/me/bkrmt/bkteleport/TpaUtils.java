@@ -24,7 +24,7 @@ public class TpaUtils {
                 }
                 this.cancel();
             }
-        }.runTaskLater(plugin, 20 * plugin.getConfig().getInt("tpa-expiration"));
+        }.runTaskLater(plugin, 20 * plugin.getConfigManager().getConfig().getInt("tpa-expiration"));
         playerExpiredChecker.put(playerSender.getName().toLowerCase() + "-" + playerTarget.getName().toLowerCase() + "-" + type.toString(), checker);
     }
 

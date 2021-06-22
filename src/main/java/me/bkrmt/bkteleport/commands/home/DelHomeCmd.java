@@ -16,8 +16,6 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class DelHomeCmd extends Executor {
-    private Configuration configFile;
-    private Configuration spyConfigFile;
 
     public DelHomeCmd(BkPlugin plugin, String langKey, String permission) {
         super(plugin, langKey, permission);
@@ -51,7 +49,7 @@ public class DelHomeCmd extends Executor {
                     }
                     if (spy.length == 2) {
                         if (getPlugin().getFile("userdata", spiedFile).exists()) {
-                            spyConfigFile = getPlugin().getConfig("userdata", spiedFile);
+                            Configuration spyConfigFile = getPlugin().getConfigManager().getConfig("userdata", spiedFile);
                             if (spyConfigFile.get("homes." + spy[1]) != null) {
                                 deleteHome(getPlugin(), sender, spyConfigFile, spy[1]);
                             } else {
@@ -70,14 +68,14 @@ public class DelHomeCmd extends Executor {
                 }
             } else if (args.length == 1) {
                 if (getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml").exists()) {
-                    configFile = getPlugin().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
+                    Configuration configFile = getPlugin().getConfigManager().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
                     if (configFile.get("homes." + args[0]) == null) {
                         sender.sendMessage(getPlugin().getLangFile().get("error.unknown-home").replace("{home-name}", args[0]));
                     } else {
                         sender.sendMessage(getPlugin().getLangFile().get("info.home-deleted"));
                         configFile.set("player", sender.getName());
                         configFile.set("homes." + args[0], null);
-                        configFile.save(false);
+                        configFile.saveToFile();
                     }
                 } else {
                     sender.sendMessage(getPlugin().getLangFile().get("error.unknown-home").replace("{home-name}", args[0]));
@@ -92,6 +90,6 @@ public class DelHomeCmd extends Executor {
     public static void deleteHome(BkPlugin plugin, CommandSender sender, Configuration spyConfigFile, String home) {
         sender.sendMessage(plugin.getLangFile().get("info.home-deleted"));
         spyConfigFile.set("homes." + home, null);
-        spyConfigFile.save(false);
+        spyConfigFile.saveToFile();
     }
 }

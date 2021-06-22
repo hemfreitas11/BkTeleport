@@ -82,7 +82,7 @@ public class TeleportRequest {
                         break;
                     case "message3":
                         tpaMessage.addExtra(plugin.getLangFile().get(sectionName + "." + configSection[x]).replace("{seconds}",
-                                String.valueOf(plugin.getConfig().getInt("tpa-expiration"))));
+                                String.valueOf(plugin.getConfigManager().getConfig().getInt("tpa-expiration"))));
                         if (x != configSection.length - 1) tpaMessage.addExtra("\n");
                         break;
                     default:

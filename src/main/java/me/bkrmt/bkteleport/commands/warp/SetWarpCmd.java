@@ -37,9 +37,10 @@ public class SetWarpCmd extends Executor {
     }
 
     private void setWarpValues(String warpName, CommandSender sender) {
-        Configuration config = getPlugin().getConfig("warps", warpName.toLowerCase() + ".yml");
+        Configuration config = new Configuration(getPlugin(), getPlugin().getFile("warps", warpName.toLowerCase() + ".yml"));
         config.set("name", warpName);
         config.setLocation("", ((Player) sender).getLocation());
-        config.save(false);
+        config.saveToFile();
+        getPlugin().getConfigManager().addConfig(config);
     }
 }
