@@ -4,7 +4,6 @@ import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.command.CommandModule;
 import me.bkrmt.bkcore.command.HelpCmd;
 import me.bkrmt.bkcore.command.ReloadCmd;
-import me.bkrmt.bkcore.config.Configuration;
 import me.bkrmt.bkcore.message.InternalMessages;
 import me.bkrmt.bkteleport.commands.CommandHandler;
 import me.bkrmt.bkteleport.commands.home.DelHomeCmd;
@@ -31,7 +30,6 @@ import java.util.logging.Level;
 public final class BkTeleport extends BkPlugin {
     public static BkPlugin plugin;
     public static Hashtable<String, List<String>> commands;
-    private Configuration configFile;
 
     @Override
     public void onEnable() {
@@ -78,11 +76,9 @@ public final class BkTeleport extends BkPlugin {
         if (!homesFolder.exists()) homesFolder.mkdir();
 
         new TpaUtils();
-        try {
-            TeleportCore.INSTANCE.getPlayersInCooldown().get("Core-Started");
-        } catch (Exception ignored) {
+
+        if (TeleportCore.INSTANCE.getPlayersInCooldown().get("Core-Started") == null)
             TeleportCore.INSTANCE.start(this);
-        }
 
         if (getConfigManager().getConfig().getBoolean("import-from-essentials")) {
             copyFromEss("warps");
