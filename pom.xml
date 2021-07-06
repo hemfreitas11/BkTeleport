@@ -57,8 +57,8 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>D:/Servidores/encomenda-server/plugins/${build.finalName}.jar</outputFile>
-<!--                            <outputFile>D:/Servidores/svteste/${build.finalName}.jar</outputFile>-->
+<!--                            <outputFile>D:/Servidores/encomenda-server/plugins/${build.finalName}.jar</outputFile>-->
+                            <outputFile>D:/Servidores/svteste/plugins/${build.finalName}.jar</outputFile>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -170,6 +170,24 @@
             <artifactId>v1_14_R1</artifactId>
             <version>v1_14_R1</version>
             <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>request</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>pagedlist</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt</groupId>
+            <artifactId>opengui</artifactId>
+            <version>1.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

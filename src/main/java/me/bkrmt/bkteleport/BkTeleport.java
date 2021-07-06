@@ -5,17 +5,19 @@ import me.bkrmt.bkcore.command.CommandModule;
 import me.bkrmt.bkcore.command.HelpCmd;
 import me.bkrmt.bkcore.command.ReloadCmd;
 import me.bkrmt.bkcore.message.InternalMessages;
+import me.bkrmt.bkcore.textanimator.AnimatorManager;
 import me.bkrmt.bkteleport.commands.CommandHandler;
 import me.bkrmt.bkteleport.commands.home.DelHomeCmd;
 import me.bkrmt.bkteleport.commands.home.HomeCmd;
 import me.bkrmt.bkteleport.commands.home.SetHomeCmd;
+import me.bkrmt.bkteleport.commands.tp.TpHereCmd;
 import me.bkrmt.bkteleport.commands.tp.TpaAcceptCmd;
 import me.bkrmt.bkteleport.commands.tp.TpaCmd;
 import me.bkrmt.bkteleport.commands.tp.TpaDenyCmd;
-import me.bkrmt.bkteleport.commands.tp.TpaHereCmd;
 import me.bkrmt.bkteleport.commands.warp.DelWarpCmd;
 import me.bkrmt.bkteleport.commands.warp.SetWarpCmd;
 import me.bkrmt.bkteleport.commands.warp.WarpCmd;
+import me.bkrmt.opengui.OpenGUI;
 import me.bkrmt.teleport.TeleportCore;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,19 +30,22 @@ import java.util.*;
 import java.util.logging.Level;
 
 public final class BkTeleport extends BkPlugin {
-    public static BkPlugin plugin;
-    public static Hashtable<String, List<String>> commands;
+    private static BkTeleport plugin;
+    private Hashtable<String, List<String>> commands;
+    private AnimatorManager animatorManager;
 
     @Override
     public void onEnable() {
         plugin = this;
         start(true);
         setRunning(true);
+        OpenGUI.INSTANCE.register(this);
+        animatorManager = new AnimatorManager(this);
         getCommandMapper()
                 .addCommand(new CommandModule(new HelpCmd(plugin, "bkteleport", ""), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new ReloadCmd(plugin, "tpreload", "bkteleport.reload"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new TpaCmd(plugin, "tpa", "bkteleport.tpa"), null))
-                .addCommand(new CommandModule(new TpaHereCmd(plugin, "tpahere", "bkteleport.tpahere"), null))
+                .addCommand(new CommandModule(new TpHereCmd(plugin, "tpahere", "bkteleport.tpahere"), null))
                 .addCommand(new CommandModule(new TpaAcceptCmd(plugin, "tpaccept", "bkteleport.tpaccept"), null))
                 .addCommand(new CommandModule(new TpaDenyCmd(plugin, "tpdeny", "bkteleport.tpdeny"), null))
                 .addCommand(new CommandModule(new SetHomeCmd(plugin, "sethome", "bkteleport.sethome"), (a, b, c, d) -> Collections.singletonList("")))
@@ -54,28 +59,26 @@ public final class BkTeleport extends BkPlugin {
                 .registerAll();
 
         commands = new Hashtable<>();
-        commands.put("tpa", PluginUtils.getList("commands.tpa"));
-        commands.put("tpahere", PluginUtils.getList("commands.tpahere"));
-        commands.put("tpaccept", PluginUtils.getList("commands.tpaccept"));
-        commands.put("tpdeny", PluginUtils.getList("commands.tpdeny"));
-        commands.put("home", PluginUtils.getList("commands.home"));
-        commands.put("homes", PluginUtils.getList("commands.homes"));
-        commands.put("sethome", PluginUtils.getList("commands.sethome"));
-        commands.put("delhome", PluginUtils.getList("commands.delhome"));
-        commands.put("warp", PluginUtils.getList("commands.warp"));
-        commands.put("warps", PluginUtils.getList("commands.warps"));
-        commands.put("setwarp", PluginUtils.getList("commands.setwarp"));
-        commands.put("delwarp", PluginUtils.getList("commands.delwarp"));
+        commands.put("tpa", getConfigManager().getConfig().getStringList("commands.tpa"));
+        commands.put("tpahere", getConfigManager().getConfig().getStringList("commands.tpahere"));
+        commands.put("tpaccept", getConfigManager().getConfig().getStringList("commands.tpaccept"));
+        commands.put("tpdeny", getConfigManager().getConfig().getStringList("commands.tpdeny"));
+        commands.put("home", getConfigManager().getConfig().getStringList("commands.home"));
+        commands.put("homes", getConfigManager().getConfig().getStringList("commands.homes"));
+        commands.put("sethome", getConfigManager().getConfig().getStringList("commands.sethome"));
+        commands.put("delhome", getConfigManager().getConfig().getStringList("commands.delhome"));
+        commands.put("warp", getConfigManager().getConfig().getStringList("commands.warp"));
+        commands.put("warps", getConfigManager().getConfig().getStringList("commands.warps"));
+        commands.put("setwarp", getConfigManager().getConfig().getStringList("commands.setwarp"));
+        commands.put("delwarp", getConfigManager().getConfig().getStringList("commands.delwarp"));
 
-        getServer().getPluginManager().registerEvents(new ButtonFunctions(), this);
+//        getServer().getPluginManager().registerEvents(new ButtonFunctions(), this);
         getServer().getPluginManager().registerEvents(new CommandHandler(), this);
 
-        File warpsFolder = new File(getDataFolder().getPath() + File.separator + "warps");
+        File warpsFolder = getFile("", "warps");
         if (!warpsFolder.exists()) warpsFolder.mkdir();
-        File homesFolder = new File(getDataFolder().getPath() + File.separator + "userdata");
+        File homesFolder = getFile("", "userdata");
         if (!homesFolder.exists()) homesFolder.mkdir();
-
-        new TpaUtils();
 
         if (TeleportCore.INSTANCE.getPlayersInCooldown().get("Core-Started") == null)
             TeleportCore.INSTANCE.start(this);
@@ -117,6 +120,19 @@ public final class BkTeleport extends BkPlugin {
                     getServer().getLogger().log(Level.INFO, InternalMessages.ESS_COPY_DONE.getMessage().replace("{0}", getName()));
             }
         }
+    }
+
+    @Override
+    public AnimatorManager getAnimatorManager() {
+        return animatorManager;
+    }
+
+    public static BkTeleport getInstance() {
+        return plugin;
+    }
+
+    public Hashtable<String, List<String>> getCommands() {
+        return commands;
     }
 
     private List<String> warpsTabCompleter(String[] args, CommandSender sender) {

@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
-import static me.bkrmt.bkteleport.BkTeleport.plugin;
-
 public class WarpCmd extends Executor {
 
     public WarpCmd(BkPlugin plugin, String langKey, String permission) {
@@ -86,10 +84,10 @@ public class WarpCmd extends Executor {
     }
 
     private void sendWarps(Player sender) {
-        if (plugin.getConfigManager().getConfig().getBoolean("custom-warps-list-command.enabled")) {
-            plugin.getServer().getPluginManager().callEvent(
+        if (getPlugin().getConfigManager().getConfig().getBoolean("custom-warps-list-command.enabled")) {
+            getPlugin().getServer().getPluginManager().callEvent(
                     new PlayerCommandPreprocessEvent(
-                            sender, plugin.getConfigManager().getConfig().getString("custom-warps-list-command.command")
+                            sender, getPlugin().getConfigManager().getConfig().getString("custom-warps-list-command.command")
                     )
             );
         } else {
@@ -125,8 +123,8 @@ public class WarpCmd extends Executor {
                         }
                         sender.openInventory(warpsMenu);
                     } else {
-                        TextComponent line = new TextComponent(Utils.translateColor(plugin.getLangFile().get("info.warp-list.start")));
-                        String commandString = plugin.getLangFile().get("commands.warp.command");
+                        TextComponent line = new TextComponent(Utils.translateColor(getPlugin().getLangFile().get("info.warp-list.start")));
+                        String commandString = getPlugin().getLangFile().get("commands.warp.command");
                         List<String> allowedWarps = new ArrayList<>();
                         for (String warpName : keys) {
                             if (sender.hasPermission("bkteleport.warp." + warpName)) {
@@ -139,10 +137,10 @@ public class WarpCmd extends Executor {
                             String warpName = it.next();
                             line.addExtra(PluginUtils.getTextComponent(commandString, warpName, UserType.User, TeleportType.Warp));
                             if (it.hasNext()) {
-                                line.addExtra(Utils.translateColor(plugin.getLangFile().get("info.home-list.separator")));
+                                line.addExtra(Utils.translateColor(getPlugin().getLangFile().get("info.home-list.separator")));
                             }
                         }
-                        line.addExtra(Utils.translateColor(plugin.getLangFile().get("info.home-list.end")));
+                        line.addExtra(Utils.translateColor(getPlugin().getLangFile().get("info.home-list.end")));
 
                         sender.spigot().sendMessage(line);
                     }

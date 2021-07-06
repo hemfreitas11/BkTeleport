@@ -12,8 +12,6 @@ import me.bkrmt.teleport.TeleportCore;
 import me.bkrmt.teleport.TeleportType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -41,7 +39,7 @@ public class HomeCmd extends Executor {
                     String spiedFile = null;
                     if (spied == null) {
                         for (File homesFile : new File(getPlugin().getDataFolder().getPath() + File.separator + "userdata").listFiles()) {
-                            FileConfiguration tempConfig = YamlConfiguration.loadConfiguration(homesFile);
+                            Configuration tempConfig = getPlugin().getConfigManager().getConfig("userdata", homesFile.getName());
                             if (tempConfig.getString("player") != null) {
                                 if (tempConfig.getString("player").equalsIgnoreCase(spy[0])) {
                                     spiedFile = homesFile.getName();
@@ -50,6 +48,7 @@ public class HomeCmd extends Executor {
                             }
                         }
                     }
+
                     if (spiedFile == null && spied != null) spiedFile = spied.getUniqueId().toString() + ".yml";
                     else if (spiedFile == null) {
                         sender.sendMessage(getPlugin().getLangFile().get("error.homes-not-found").replace("{player}", spy[0]));

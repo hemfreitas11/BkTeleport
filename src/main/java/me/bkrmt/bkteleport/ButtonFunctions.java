@@ -1,5 +1,7 @@
+/*
 package me.bkrmt.bkteleport;
 
+import me.bkrmt.bkcore.BkPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,8 +12,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-
-import static me.bkrmt.bkteleport.BkTeleport.plugin;
 
 public class ButtonFunctions implements Listener {
     @EventHandler
@@ -70,4 +70,4 @@ public class ButtonFunctions implements Listener {
             }
         }
     }
-}
+}*/

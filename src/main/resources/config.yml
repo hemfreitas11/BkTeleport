@@ -14,7 +14,7 @@
 language: en_US
 
 # The amount of time in seconds until a teleport request expires if it is not answered
-tpa-expiration: 30
+tp-expiration: 30
 
 # The amount of time in seconds that the player will be invulnerable to damage after a teleport
 invulnerable-time: 0

@@ -107,42 +107,64 @@ commands:
     usage: '/delwarp <warp-name>'
 # *-----------------------*=[|]=*-----------------------*
 
+
+# *-------------*=/[Teleport Requests]\=*---------------*
+teleport-requests:
+  tpa:
+    accept-button: '&2&l[ACCEPT]'
+    deny-button: '&c&l[DECLINE]'
+    accept-hover: '&2Click to accept.'
+    deny-hover: '&cClick to deny.'
+    message:
+      - '&a*--------------------*=/[|]\=*--------------------*'
+      - ' '
+      - '&aThe player &a&l{player} &awants to teleport to you.'
+      - ' '
+      - '&a          {accept-button} {deny-button}'
+      - ' '
+      - '&aThis teleport request will expire in &2{seconds} &aseconds.'
+      - ' '
+      - '&a*-----------------------------------------------*'
+      - ' '
+  tphere:
+    accept-button: '&2&l[ACCEPT]'
+    deny-button: '&c&l[ACCEPT]'
+    accept-hover: '&2Click to accept.'
+    deny-hover: '&cClick to deny.'
+    message:
+      - ' '
+      - '&e*--------------------*=/[|]\=*--------------------*'
+      - ' '
+      - '&eThe player &6&l{player} &ewants you to go to him.'
+      - ' '
+      - '&e          {accept-button} {deny-button} '
+      - ' '
+      - '&eThis teleport request will expire in &6{seconds} &eseconds.'
+      - ' '
+      - '&e*-----------------------------------------------*'
+      - ' '
+# *-----------------------*=[|]=*-----------------------*
+
+
+# *------------------*=/[Homes Menu]\=*-----------------*
+homes-menu:
+  title: '&8&l{player}''s homes'
+  default-home-name: '&e/home &6{home-name}'
+
+gui-buttons:
+  next-page:
+    name: '{shine green bold}Next Page'
+    description: '&7Go to page &a{page-number}'
+  previous-page:
+    name: '{shine red bold}Next Page'
+    description: '&7Return to page &c{page-number}'
+# *-----------------------*=[|]=*-----------------------*
+
+
 # Here you can change all the messages in the plugin
 # To remove the blank spaces simply change the message from ' ' to ''
 # *-----------------*=/[Info Messages]\=*---------------*
 info:
-  tpa-message:
-    accept-button: '&2&l[HERE]'
-    deny-button: '&c&l[HERE]'
-    accept-hover: '&2Click to accept.'
-    deny-hover: '&cClick to deny.'
-    line1: ' '
-    line2: '&a*--------------------*=/[|]\=*--------------------*'
-    line3: ' '
-    message1: '&aThe player &a&l{player} &awants to teleport to you.'
-    line4: ' '
-    message2: '&aClick {accept-button} &ato accept or click {deny-button} &ato deny.'
-    line5: ' '
-    message3: '&aThe teleport request will expire in &2{seconds} &aseconds.'
-    line6: ' '
-    line7: '&a*-----------------------------------------------*'
-    line8: ' '
-  tpahere-message:
-    accept-button: '&2&l[HERE]'
-    deny-button: '&c&l[HERE]'
-    accept-hover: '&2Click to accept.'
-    deny-hover: '&cClick to deny.'
-    line1: ' '
-    line2: '&e*--------------------*=/[|]\=*--------------------*'
-    line3: ' '
-    message1: '&eThe player &6&l{player} &ewants you to go to him.'
-    line4: ' '
-    message2: '&eClick {accept-button} &eto accept or click {deny-button} &eto deny.'
-    line5: ' '
-    message3: '&eThe teleport request will expire in &6{seconds} &eseconds.'
-    line6: ' '
-    line7: '&e*-----------------------------------------------*'
-    line8: ' '
   configs-reloaded: '&aAll the configs and messages have been reloaded!'
   spying: '&5&oSpying: {player}'
   invulnerable-remaining: '&cInvulnerable for {seconds} seconds'
@@ -156,8 +178,9 @@ info:
   next-name: '&2&lNext'
   next-desc: '&aGo to the next page.'
   sent-invite: '&aYou sent a teleport request to &2{player}.'
-  invite-accepted: '&aTeleport request to &2{player} &aaccepted.'
-  invite-accepted-self: '&aTeleport request from &2{player} &aaccepted.'
+  invite-accepted:
+    self: '&aTeleport request to &2{player} &a was accepted.'
+    others: '&aTeleport request from &2{player} &aaccepted.'
   invite-denied: '&cTeleport request from &4{player} &cdeclined.'
   home-deleted: '&aHome removed.'
   warp-deleted: '&aWarp removed.'
@@ -185,7 +208,7 @@ info:
 # *----------------*=/[Error Messages]\=*---------------*
 error:
   max-warps-reached: '&cYou hit the max number of warps.'
-  wrong-spy-format: '&cExample: /home BeccarMT:diamond'
+  wrong-spy-format: '&cExample: /home Bkr_:diamond'
   home-limit: '&cYou hit your limit of &4{max-homes} &chomes.'
   player-not-found: '&cThe player &4{player} &cwas not found.'
   no-player-specified: '&cYou must specify the name of the player that you want to accept/deny the request from.'
@@ -204,8 +227,9 @@ error:
   invite-denied: '&cYour teleport request to &4{player} &cwas declined.'
   cant-invite-self: '&cYou cant send a teleport request to yourself.'
   cant-invite-again: '&cYou already sent a request to this player.'
-  invite-expired: '&cThe teleport request from &4{player} &chas expired.'
-  invite-expired-self: '&cThe teleport request to &4{player} &chas expired.'
+  invite-expired:
+    self: '&cThe teleport request from &4{player} &chas expired.'
+    others: '&cThe teleport request to &4{player} &chas expired.'
   cant-attack-now:
     self: '&cYou can''t attack for {seconds} more seconds!'
     others: '&cThis player can''t be attacked for {seconds} more seconds!'

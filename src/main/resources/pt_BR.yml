@@ -108,42 +108,47 @@ commands:
 # *-----------------------*=[|]=*-----------------------*
 
 
+# *---------------*=/[Pedidos Teleporte]\=*-------------*
+teleport-requests:
+  tpa:
+    accept-button: '&2&l[ACEITAR]'
+    deny-button: '&c&l[NEGAR]'
+    accept-hover: '&2Clique para aceitar.'
+    deny-hover: '&cClique para negar.'
+    message:
+      - '&a*--------------------*=/[|]\=*--------------------*'
+      - ' '
+      - '&aO jogador &a&l{player} &adeseja se teleportar ate voce.'
+      - ' '
+      - '&a            {accept-button} {deny-button}'
+      - ' '
+      - '&aEsse pedido de teleporte ira expirar em &2{seconds} &asegundos.'
+      - ' '
+      - '&a*-----------------------------------------------*'
+      - ' '
+  tphere:
+    accept-button: '&2&l[ACEITAR]'
+    deny-button: '&c&l[NEGAR]'
+    accept-hover: '&2Clique para aceitar.'
+    deny-hover: '&cClique para negar.'
+    message:
+      - '&e*--------------------*=/[|]\=*--------------------*'
+      - ' '
+      - '&eO jogador &6&l{player} &edeseja que voce va ate ele.'
+      - ' '
+      - '&e            {accept-button} {deny-button}'
+      - ' '
+      - '&eEsse pedido de teleporte ira expirar em &6{seconds} &esegundos.'
+      - ' '
+      - '&e*-----------------------------------------------*'
+      - ' '
+# *-----------------------*=[|]=*-----------------------*
+
+
 # Aqui você pode mudar todas as mensagens do plugin
 # Para remover espaços vazios basta mudar a mensagem de ' ' para ''
 # *---------------*=/[Mensagens Gerais]\=*--------------*
 info:
-  tpa-message:
-    accept-button: '&2&l[AQUI]'
-    deny-button: '&c&l[AQUI]'
-    accept-hover: '&2Clique para aceitar.'
-    deny-hover: '&cClique para negar.'
-    line1: ' '
-    line2: '&a*--------------------*=/[|]\=*--------------------*'
-    line3: ' '
-    message1: '&aO jogador &a&l{player} &adeseja se teleportar ate voce.'
-    line4: ' '
-    message2: '&aClique {accept-button} &apara aceitar ou clique {deny-button} &apara negar.'
-    line5: ' '
-    message3: '&aO pedido de teleporte ira expirar em &2{seconds} &asegundos.'
-    line6: ' '
-    line7: '&a*-----------------------------------------------*'
-    line8: ' '
-  tpahere-message:
-    accept-button: '&2&l[AQUI]'
-    deny-button: '&c&l[AQUI]'
-    accept-hover: '&2Clique para aceitar.'
-    deny-hover: '&cClique para negar.'
-    line1: ' '
-    line2: '&e*--------------------*=/[|]\=*--------------------*'
-    line3: ' '
-    message1: '&eO jogador &6&l{player} &edeseja que voce va ate ele.'
-    line4: ' '
-    message2: '&eClique {accept-button} &epara aceitar ou clique {deny-button} &epara negar.'
-    line5: ' '
-    message3: '&eO pedido de teleporte ira expirar em &6{seconds} &esegundos.'
-    line6: ' '
-    line7: '&e*-----------------------------------------------*'
-    line8: ' '
   configs-reloaded: '&aTodas as configuracoes e mensagens foram recarregadas!'
   spying: '&5&oEspiando: {player}'
   invulnerable-remaining: '&cInvulneravel por {seconds} segundos'

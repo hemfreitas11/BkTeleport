@@ -2,21 +2,20 @@ package me.bkrmt.bkteleport.commands.tp;
 
 import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.command.Executor;
-import me.bkrmt.bkteleport.RequestType;
-import me.bkrmt.bkteleport.TeleportRequest;
-import me.bkrmt.bkteleport.TpaUtils;
+import me.bkrmt.bkcore.request.ClickableRequest;
+import me.bkrmt.bkteleport.PluginUtils;
 import me.bkrmt.bkteleport.events.PlayerBkTeleportSendEvent;
 import me.bkrmt.teleport.TeleportCore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TpaHereCmd extends Executor {
-
-
-    public TpaHereCmd(BkPlugin plugin, String langKey, String permission) {
+public class TpHereCmd extends Executor {
+    public TpHereCmd(BkPlugin plugin, String langKey, String permission) {
         super(plugin, langKey, permission);
     }
+
+    public static final String TPHERE_IDENTIFIER = "tphere-request";
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -29,19 +28,12 @@ public class TpaHereCmd extends Executor {
                         Player senderPlayer = ((Player) sender);
                         Player targetPlayer = getPlugin().getServer().getPlayer(args[0]);
                         if (!senderPlayer.equals(targetPlayer)) {
-                            RequestType type = TpaUtils.isExpiring(senderPlayer.getName().toLowerCase(), targetPlayer.getName().toLowerCase());
-                            if (type == null) {
-                                new TeleportRequest(senderPlayer, targetPlayer, RequestType.TpaHere).sendMessage();
-                                targetPlayer.playSound(targetPlayer.getLocation(), getPlugin().getHandler().getSoundManager().getPling(), 15, 1);
-                                senderPlayer.sendMessage(getPlugin().getLangFile().get("info.sent-invite").replace("{player}", targetPlayer.getName()));
-                                TpaUtils.checkExpired(((Player) sender), targetPlayer, RequestType.TpaHere);
-
+                            ClickableRequest senderRequest = ClickableRequest.getInteraction(TPHERE_IDENTIFIER, senderPlayer.getUniqueId());
+                            if (senderRequest == null) {
                                 PlayerBkTeleportSendEvent reqSendEvent = new PlayerBkTeleportSendEvent((Player) sender, targetPlayer);
                                 getPlugin().getServer().getPluginManager().callEvent(reqSendEvent);
-                                if (reqSendEvent.isCancelled()) {
-                                    type = TpaUtils.isExpiring(senderPlayer.getName().toLowerCase(), targetPlayer.getName().toLowerCase());
-                                    TpaUtils.playerExpiredChecker.get(senderPlayer.getName().toLowerCase() + "-" + targetPlayer.getName().toLowerCase() + "-" + type.toString()).cancel();
-                                    TpaUtils.playerExpiredChecker.remove(senderPlayer.getName().toLowerCase() + "-" + targetPlayer.getName().toLowerCase() + "-" + type.toString());
+                                if (!reqSendEvent.isCancelled()) {
+                                    PluginUtils.sendRequest(senderPlayer, targetPlayer, TPHERE_IDENTIFIER);
                                 }
                             } else {
                                 sender.sendMessage(getPlugin().getLangFile().get("error.cant-invite-again"));
