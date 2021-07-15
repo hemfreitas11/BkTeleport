@@ -1,6 +1,0 @@
-name: BkTeleport
-version: 2.8
-main: me.bkrmt.bkteleport.BkTeleport
-api-version: 1.13
-authors: [Bkr__]
-description: 'Replacement for essentials teleport'
