@@ -1,18 +1,22 @@
-#    __________       _____    ____
-#    |         \      |   |   /   /
-#    |    |     |     |   |  /   /
-#    |    |     |     |   | /   /      ____  ____
-#    |         /      |   |/   /       |  |_/  __\
-#    |         \      |       \        |   ___/
-#    |    |     |     |   |\   \       |  |
-#    |    |     |     |   | \   \      |  |        ______________
-#    |         /      |   |  \   \     |  |        |             |
+#
+#  ▄▄▄▄   ██ ▄█▄▄▄█████▓█████ ██▓   ▓█████ ██▓███  ▒█████  ██▀███ ▄▄▄█████▓
+# ▓█████▄ ██▄█▒▓  ██▒ ▓▓█   ▀▓██▒   ▓█   ▀▓██░  ██▒██▒  ██▓██ ▒ ██▓  ██▒ ▓▒
+# ▒██▒ ▄█▓███▄░▒ ▓██░ ▒▒███  ▒██░   ▒███  ▓██░ ██▓▒██░  ██▓██ ░▄█ ▒ ▓██░ ▒░
+# ▒██░█▀ ▓██ █▄░ ▓██▓ ░▒▓█  ▄▒██░   ▒▓█  ▄▒██▄█▓▒ ▒██   ██▒██▀▀█▄ ░ ▓██▓ ░
+# ░▓█  ▀█▒██▒ █▄ ▒██▒ ░░▒████░██████░▒████▒██▒ ░  ░ ████▓▒░██▓ ▒██▒ ▒██▒ ░
+# ░▒▓███▀▒ ▒▒ ▓▒ ▒ ░░  ░░ ▒░ ░ ▒░▓  ░░ ▒░ ▒▓▒░ ░  ░ ▒░▒░▒░░ ▒▓ ░▒▓░ ▒ ░░
+# ▒░▒   ░░ ░▒ ▒░   ░    ░ ░  ░ ░ ▒  ░░ ░  ░▒ ░      ░ ▒ ▒░  ░▒ ░ ▒░   ░
+#  ░    ░░ ░░ ░  ░        ░    ░ ░     ░  ░░      ░ ░ ░ ▒   ░░   ░  ░
+#  ░     ░  ░             ░  ░   ░  ░  ░  ░           ░ ░    ░
+#       ░
+#
+#                 ® BkPlugins | discord.gg/2MHgyjCuPc
+#                              Made by: Bkr__
 #
 
 # This is where you can customize the commands of the plugin, their descriptions and usages in the help command
 # *-------------------*=/[Commands]\=*------------------*
 commands:
-
   # Here you can change how the help message of the plugin will look like
   help-format:
     header: '&7*----------------*=/[&2&lBkTeleport&7]\=*----------------*'
@@ -33,6 +37,24 @@ commands:
     command: 'tpreload'
     description: 'Updates all the configs and messages of the plugin.'
     usage: '/tpreload'
+
+  #Back Command
+  back:
+    command: 'back'
+    description: 'Returns to your previous location.'
+    usage: '/back'
+
+  #Spawn Command
+  spawn:
+    command: 'spawn'
+    description: 'Returns to the server spawn.'
+    usage: '/spawn [player]'
+
+  #SetSpawn Command
+  setspawn:
+    command: 'setspawn'
+    description: 'Sets the location for the server spawn.'
+    usage: '/setspawn'
 
   #Tpa Command
   tpa:
@@ -86,7 +108,11 @@ commands:
   warp:
     command: 'warp'
     description: 'Teleports to a warp.'
-    usage: '/warp <warp-name>'
+    usage: '/warp <warp-name | edit>'
+    subcommands:
+      edit:
+        command: 'edit'
+        description: 'Edits existing warps'
 
   #Warps Command
   warps:
@@ -116,48 +142,259 @@ teleport-requests:
     accept-hover: '&2Click to accept.'
     deny-hover: '&cClick to deny.'
     message:
-      - '&a*--------------------*=/[|]\=*--------------------*'
+      - '&a*---------------*=/[|]\=*----------------*'
       - ' '
-      - '&aThe player &a&l{player} &awants to teleport to you.'
+      - '&aThe player &a&l{sender} &awants to teleport to you.'
       - ' '
-      - '&a          {accept-button} {deny-button}'
+      - '&a               {accept-button} {deny-button}'
       - ' '
       - '&aThis teleport request will expire in &2{seconds} &aseconds.'
       - ' '
-      - '&a*-----------------------------------------------*'
+      - '&a*---------------------------------------*'
       - ' '
-  tphere:
+  tpahere:
     accept-button: '&2&l[ACCEPT]'
-    deny-button: '&c&l[ACCEPT]'
+    deny-button: '&c&l[DECLINE]'
     accept-hover: '&2Click to accept.'
     deny-hover: '&cClick to deny.'
     message:
       - ' '
-      - '&e*--------------------*=/[|]\=*--------------------*'
+      - '&e*---------------*=/[|]\=*----------------*'
       - ' '
-      - '&eThe player &6&l{player} &ewants you to go to him.'
+      - '   &eThe player &6{sender} &ewants you to go to him.'
       - ' '
-      - '&e          {accept-button} {deny-button} '
+      - '&e               {accept-button} {deny-button} '
       - ' '
       - '&eThis teleport request will expire in &6{seconds} &eseconds.'
       - ' '
-      - '&e*-----------------------------------------------*'
+      - '&e*---------------------------------------*'
       - ' '
 # *-----------------------*=[|]=*-----------------------*
 
 
 # *------------------*=/[Homes Menu]\=*-----------------*
 homes-menu:
-  title: '&8&l{player}''s homes'
-  default-home-name: '&e/home &6{home-name}'
-
+  title: '&8&l{player}''s homes {current-page}/{total-pages}'
+  default-home-name: '&e/home {shine gold text[{home-name}]}'
+  visibility:
+    public: '&ePUBLIC'
+    private: '&cPRIVATE'
+  new-home:
+    name: '{shine green}New Home'
+    description:
+      - ' '
+      - '&7Click to create a new home here.'
+      - ' '
+      - '&7Homes created: &a{homes}&7/&a{max-homes}&7.'
+    confirm:
+      title: '&8&lDo you want to purchase a new home?'
+      info:
+        name: '{shine green bold}Create new home'
+        description:
+          - ' '
+          - '&7Price: {price}'
+          - '&7Click confirm to purchase a new home'
+      accept: '{shine green}Confirm'
+      decline: '{shine red}Decline'
+  edit-menu:
+    title: '&8&l{home-name}''s options'
+    button:
+      enable:
+        name: '{shine green bold} Enable Edit Mode'
+        lore:
+          - ' '
+          - '&7Click a home to teleport to it.'
+          - ' '
+          - '&7&oClick here to enable the edit mode.'
+      disable:
+        name: '{shine red bold} Disable Edit Mode'
+        lore:
+          - ' '
+          - '&7You are now in edit mode. Click a home to edit it.'
+          - ' '
+          - '&7&oClick here to disable the edit mode.'
+    set-name:
+      name: '&aSet Name'
+      lore:
+        - ' '
+        - '&7Sets the display name of the home.'
+        - ' '
+        - '&7This changes only the name of the display'
+        - '&7item in the menu, not the home name itself.'
+    set-lore:
+      name: '&aSet Description'
+      lore:
+        - ' '
+        - '&7Sets a new description for the home.'
+        - ' '
+        - '&7Type only a "#" to remove.'
+    set-location:
+      name: '&aSet Location'
+      lore:
+        - ' '
+        - '&7Sets a new location for the home'
+        - '&7and preserves all the home options.'
+        - ' '
+        - '&7Current location:'
+        - '&7World: &7&l{world}'
+        - '&7X: &7&l{x}'
+        - '&7Y: &7&l{y}'
+        - '&7Z: &7&l{z}'
+    set-item:
+      name: '&aSet Item'
+      lore:
+        - ' '
+        - '&7Sets the display item of the home.'
+        - ' '
+        - '&7Current item:'
+        - '&7&l{item}'
+    set-public:
+      name: '&aSet Public'
+      lore:
+        - ' '
+        - '&7Sets wether anyone can'
+        - '&7teleport to this home.'
+        - ' '
+        - '&7Current visibility:'
+        - '{visibility}'
+    delete:
+      name: '&4Delete home'
+      lore:
+        - ' '
+        - '&7Deletes this home.'
+        - '&7You will be asked to confirm.'
+        
+warps-menu:
+  title: '&8&lServer warps {current-page}/{total-pages}'
+  default-warp-name: '&e/warp &6{shine gold text[{warp-name}]}'
+  default-warp-lore:
+  - ' '
+  - '&6Change me with the command /warp edit!'
+  edit-menu:
+    button:
+      enable:
+        name: '{shine yellow bold} Enter Edit Mode'
+        lore:
+          - ' '
+          - 'Click here to enter the edit mode.'
+      disable:
+        name: '{shine green bold} Exit Edit Mode'
+        lore:
+          - ' '
+          - 'Click here to exit the edit mode.'
+    title: '&8&l{warp-name}''s options'
+    set-name:
+      name: '&aSet Name'
+      lore:
+        - ' '
+        - '&7Sets the display name of the warp.'
+        - ' '
+        - '&7This changes only the name'
+        - '&7of the display item in the'
+        - '&7menu, not the warp name itself.'
+    set-lore:
+      name: '&aSet Description'
+      lore:
+        - ' '
+        - '&7Sets a new description for the warp.'
+        - ' '
+        - '&7Type only a "#" to remove.'
+    set-location:
+      name: '&aSet Location'
+      lore:
+        - ' '
+        - '&7Sets a new location for the warp'
+        - '&7and preserves all the warp options.'
+        - ' '
+        - '&7Current location:'
+        - '&7World: &7&l{world}'
+        - '&7X: &7&l{x}'
+        - '&7Y: &7&l{y}'
+        - '&7Z: &7&l{z}'
+    set-item:
+      name: '&aSet Item'
+      lore:
+        - ' '
+        - '&7Sets the display item of the warp.'
+        - ' '
+        - '&7Current item:'
+        - '&7&l{item}'
+    set-slot:
+      no-slot: '&7&lNo slot set'
+      name: '&aSet Slot'
+      lore:
+        - ' '
+        - '&7OPTIONAL'
+        - ' '
+        - '&7This option only has an effect when not in edit mode.'
+        - ' '
+        - '&7Sets the slot that this warp'
+        - '&7will be shown in the warps menu.'
+        - ' '
+        - '&7Warps without slots set will be displayed'
+        - '&7in order inside the pages.'
+        - ' '
+        - '&7Highly recommended to set the slot'
+        - '&7and page for all your warps.'
+        - ' '
+        - '&7Set to -1 to remove.'
+        - ' '
+        - '&7Current slot: &7&l{slot}'
+    set-page:
+      no-page: '&7&lNo page set'
+      name: '&aSet Page'
+      lore:
+        - ' '
+        - '&7OPTIONAL'
+        - ' '
+        - '&7This option only has an effect when not in edit mode.'
+        - ' '
+        - '&7Sets the page that this warp'
+        - '&7will be shown in the warps menu.'
+        - ' '
+        - '&7Warps without pages set will be displayed'
+        - '&7in the first page with an available slot.'
+        - ' '
+        - '&7Highly recommended to set the slot'
+        - '&7and page for all your warps.'
+        - ' '
+        - '&7Set to -1 to remove.'
+        - ' '
+        - '&7Current page: &7&l{page}'
+    set-command:
+      name: '&aSet Command'
+      lore:
+        - ' '
+        - '&7OPTIONAL'
+        - ' '
+        - '&7Sets a command to be executed by the console'
+        - '&7when the player clicks this warp.'
+        - ' '
+        - '&7Type the command without the "/".'
+        - ' '
+        - '&7Use ''{player}'' to include the player name'
+        - '&7Placeholders from PlaceholderAPI are supported'
+        - '&7Ex: gamemode creative {player}.'
+        - ' '
+        - '&7Current command: &7&l/{command}'
+    delete:
+      name: '&4Delete Warp'
+      lore:
+        - ' '
+        - '&7Deletes this warp.'
+        - '&7You will be asked to confirm.'
+        
 gui-buttons:
   next-page:
     name: '{shine green bold}Next Page'
     description: '&7Go to page &a{page-number}'
   previous-page:
-    name: '{shine red bold}Next Page'
+    name: '{shine red bold}Previous Page'
     description: '&7Return to page &c{page-number}'
+  previous-menu:
+    name: '{shine red bold}Previous Menu'
+    description:
+      - '&7Return to the previous menu'
 # *-----------------------*=[|]=*-----------------------*
 
 
@@ -165,21 +402,57 @@ gui-buttons:
 # To remove the blank spaces simply change the message from ' ' to ''
 # *-----------------*=/[Info Messages]\=*---------------*
 info:
-  configs-reloaded: '&aAll the configs and messages have been reloaded!'
+  new-home: '&aType the home name'
+  spawn-set: '&aSpawn set!'
+  last-location:
+    title: '&aYou returned to'
+    subtitle: '&ayour previous location'
+  edit-mode:
+    enabled: '&aEdit mode enabled!'
+    disabled: '&cEdit mode disabled!'
+  confirm:
+    title: '&8&lAre you sure?'
+    accept: '&a&lConfirm'
+    decline: '&c&lDecline'
+    location: '&4&lAre you sure you want to set the location?'
+    delete: '&4&lAre you sure you want to delete?'
+    cancelled: '&cCancelled.'
+  deleted:
+    warp: '&aWarp deleted.'
+    home: '&aHome deleted.'
+  name-set: '&aNew display name set!'
+  visibility:
+    set-public: '&eYour home is now public!'
+    set-private: '&cYour home is now private!'
+  command-set: '&aNew click command set!'
+  page-set: '&aNew page set!'
+  slot-set: '&aNew slot set!'
+  lore-set: '&aNew lore set!'
+  location-set: '&aNew location set!'
+  item-set: '&aNew display item set!'
+  input-canceled: '&eInput cancelled.'
+  configs-reloaded: '&aAll the configs acnd messages have been reloaded!'
   spying: '&5&oSpying: {player}'
   invulnerable-remaining: '&cInvulnerable for {seconds} seconds'
   home-list-title: '&8&lHomes'
   warp-list-title: '&8&lWarps'
   home-set: '&aHome &2{home-name} &asuccessfully set.'
   time-remaining: '&7Teleporting in &a{seconds}'
-  config-reloaded: '&aConfig and messages successfully reloaded.'
-  return-name: '&c&lReturn'
-  return-desc: '&4Return to the previous page.'
-  next-name: '&2&lNext'
-  next-desc: '&aGo to the next page.'
-  sent-invite: '&aYou sent a teleport request to &2{player}.'
+  sent-invite: '&aYou sent a teleport request to &2{player}&a.'
+  input:
+    number: '&a&lType a number'
+    new-name: '&a&lType the new name'
+    new-item: '&a&lType the new item'
+    command:
+      title: '&a&lType the new item'
+      subtitle: '&7Use ''&e{player}&7'' &7for the player name'
+    new-lore:
+      title: '&eEnter the new lore'
+      subtitle: '&7You can start a new line with a ''&e#&7'' &7character'
+    cancel: '&7Type ''&c{cancel-input}&7''  to cancel.'
+    countdown: '&7&lCancelling in &c&l{seconds}'
   invite-accepted:
-    self: '&aTeleport request to &2{player} &a was accepted.'
+    self: '&aTeleport request to &2{player} &awas accepted.'
     others: '&aTeleport request from &2{player} &aaccepted.'
   invite-denied: '&cTeleport request from &4{player} &cdeclined.'
   home-deleted: '&aHome removed.'
@@ -202,13 +475,32 @@ info:
   warped:
     title: '&aYou teleported to'
     subtitle: '&2{player}'
+    home:
+      title: '&aYou teleported to'
+      subtitle: '&2{home-name}'
+    warp:
+      title: '&aYou teleported to'
+      subtitle: '&2{warp-name}'
 # *-----------------------*=[|]=*-----------------------*
 
 
 # *----------------*=/[Error Messages]\=*---------------*
 error:
-  max-warps-reached: '&cYou hit the max number of warps.'
-  wrong-spy-format: '&cExample: /home Bkr_:diamond'
+  use-setspawn: '&cUse the command /setspawn to set the spawn.'
+  invalid-spawn: '&eThe server didn''t set the spawn yet.'
+  invalid-last-location: '&cThe last location was not found.'
+  reserved-name: '&cYou can''t name a warp "edit".'
+  invalid-name: '&cThe name needs to have atleast one letter or number. Special characters will be removed.'
+  input:
+    awaiting-input: '&cYou can''t use commands now. Type ''{cancel-input}'' to cancel.'
+    canceled: '&cYou canceled the input.'
+    timedout: '&cYou didn''t type anything.'
+    no-number: '&cYou didn''t type a number.'
+    invalid-item: '&cYou typed an invalid item material.'
+  material-not-found: '&cThe item {item} from the file {file} was not found. Using the default...'
+  option-error: '&cThere was an error when executing this option.'
+  option-permission: '&cYou don''t have permission to use this option.'
+  wrong-spy-format: '&cExample: /home Bkr:diamond'
   home-limit: '&cYou hit your limit of &4{max-homes} &chomes.'
   player-not-found: '&cThe player &4{player} &cwas not found.'
   no-player-specified: '&cYou must specify the name of the player that you want to accept/deny the request from.'
@@ -220,7 +512,7 @@ error:
   no-homes: '&eYou don''t have any homes. Type /sethome <name> to set one.'
   homes-not-found: '&cThe homes of the player &4{player} &cwere not found.'
   no-home-spy: '&cThis player doesn''t have any homes.'
-  no-warps: '&eThe server didnt set any warps yet.'
+  warps-empty: '&eThe server didnt set any warps or you don''t have permission to see them.'
   other-already-waiting: '&cThe player &4{player} &cis already waiting a teleport. Request canceled.'
   already-waiting: '&cYou are already waiting a teleport.'
   no-pending-invite: '&cThis teleport request doesn''t exist anymore.'

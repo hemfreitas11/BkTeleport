@@ -4,8 +4,9 @@ import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.request.ClickableRequest;
 import me.bkrmt.bkteleport.PluginUtils;
-import me.bkrmt.bkteleport.events.PlayerBkTeleportSendEvent;
+import me.bkrmt.bkteleport.api.events.PlayerBkTeleportSendEvent;
 import me.bkrmt.teleport.TeleportCore;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,8 +20,8 @@ public class TpaCmd extends Executor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!hasPermission(sender)) {
-            sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+        if (!hasPermission(sender) && !sender.hasPermission("bkteleport.player")) {
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
         } else {
             if (args.length == 1) {
                 if (!(getPlugin().getServer().getPlayer(args[0]) == null)) {
@@ -36,16 +37,16 @@ public class TpaCmd extends Executor {
                                     PluginUtils.sendRequest(senderPlayer, targetPlayer, TPA_IDENTIFIER);
                                 }
                             } else {
-                                sender.sendMessage(getPlugin().getLangFile().get("error.cant-invite-again"));
+                                sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.cant-invite-again"));
                             }
                         } else {
-                            sender.sendMessage(getPlugin().getLangFile().get("error.cant-invite-self"));
+                            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.cant-invite-self"));
                         }
                     } else {
-                        sender.sendMessage(getPlugin().getLangFile().get("error.already-waiting"));
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.already-waiting"));
                     }
                 } else {
-                    sender.sendMessage(getPlugin().getLangFile().get("error.player-not-found").replace("{player}", args[0]));
+                    sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.player-not-found").replace("{player}", args[0]));
                 }
             } else {
                 sendUsage(sender);

@@ -17,31 +17,35 @@ public class CommandHandler implements Listener {
         BkPlugin plugin = BkTeleport.getInstance();
 
         if (BkTeleport.getInstance().getCommands().get("warp").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.warp.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.warp.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("warps").contains(commandLabel)) {
-            event.setMessage("bkteleport:" + plugin.getLangFile().get("commands.warps.command"));
+            String editSub = plugin.getLangFile().get(sender, "commands.warp.subcommands.edit.command");
+            event.setMessage("bkteleport:" + plugin.getLangFile().get(sender, "commands.warps.command") +
+                 (event.getMessage().contains(editSub) ? " " + editSub : ""));
             runCommand(sender, "", "", event);
         } else if (BkTeleport.getInstance().getCommands().get("setwarp").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.setwarp.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.setwarp.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("delwarp").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.delwarp.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.delwarp.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("home").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.home.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.home.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("homes").contains(commandLabel)) {
-            event.setMessage("bkteleport:" + plugin.getLangFile().get("commands.homes.command"));
+            event.setMessage("bkteleport:" + plugin.getLangFile().get(sender, "commands.homes.command"));
             runCommand(sender, "", "", event);
         } else if (BkTeleport.getInstance().getCommands().get("sethome").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.sethome.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.sethome.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("delhome").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.delhome.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.delhome.command"), event);
+        } else if (BkTeleport.getInstance().getCommands().get("back").contains(commandLabel)) {
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.back.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("tpa").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.tpa.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.tpa.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("tpahere").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.tpahere.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.tpahere.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("tpaccept").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.tpaccept.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.tpaccept.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("tpdeny").contains(commandLabel)) {
-            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get("commands.tpdeny.command"), event);
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.tpdeny.command"), event);
         }
     }
 

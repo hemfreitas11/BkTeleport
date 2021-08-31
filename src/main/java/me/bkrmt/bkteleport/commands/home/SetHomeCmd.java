@@ -1,9 +1,13 @@
 package me.bkrmt.bkteleport.commands.home;
 
 import me.bkrmt.bkcore.BkPlugin;
+import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.config.ConfigType;
 import me.bkrmt.bkcore.config.Configuration;
+import me.bkrmt.bkteleport.BkTeleport;
+import me.bkrmt.bkteleport.teleportable.Home;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,10 +22,11 @@ public class SetHomeCmd extends Executor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!hasPermission(sender)) {
-            sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+        Player player = (Player) sender;
+        if (!hasPermission(sender) && !sender.hasPermission("bkteleport.player")) {
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
         } else {
-            int maxHomes = getMaxHomes(sender, "bkteleport.maxhomes");
+            int maxHomes = Utils.intFromPermission(player, 3, "bkteleport.maxhomes", new String[]{"bkteleport.maxhomes.*", "bkteleport.admin"});
 
             File homesFile = getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
 
@@ -30,48 +35,59 @@ public class SetHomeCmd extends Executor {
             if (homesFile.exists()) {
                 configFile = getPlugin().getConfigManager().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
             } else {
-                configFile = new Configuration(getPlugin(), homesFile, ConfigType.Player_Data);
+                configFile = new Configuration(getPlugin(), homesFile, ConfigType.PLAYER_DATA);
                 configFile.saveToFile();
                 getPlugin().getConfigManager().addConfig(configFile);
             }
 
             int homeSize = configFile == null || configFile.get("homes") == null ? 0 : configFile.getConfigurationSection("homes").getKeys(false).size();
-            if (homeSize < maxHomes) {
+            if (maxHomes == -1 || homeSize < maxHomes) {
                 if (args.length == 0) {
-                    String homeCmd = getPlugin().getLangFile().get("commands.home.command");
-                    setHomeValues(homeCmd, sender);
+                    String homeCmd = getPlugin().getLangFile().get((OfflinePlayer) sender, "commands.home.command");
+                    setHomeValues(player, homeCmd);
                     getPlugin().sendTitle((Player) sender, 5, 40, 10,
-                            getPlugin().getLangFile().get("info.home-set").replace("{home-name}", homeCmd), "");
-                } else if (args.length == 1) {
-                    setHomeValues(args[0], sender);
-                    getPlugin().sendTitle((Player) sender, 5, 40, 10,
-                            getPlugin().getLangFile().get("info.home-set").replace("{home-name}", args[0]), "");
-
+                            getPlugin().getLangFile().get((OfflinePlayer) sender, "info.home-set").replace("{home-name}", homeCmd), "");
                 } else {
-                    sendUsage(sender);
+                    String name = Utils.joinStringArray(args);
+                    if (!name.isEmpty()) {
+                        String homeName = name
+                            .replace("\"", "")
+                            .replace("'", "")
+                            .replace("\\", "")
+                            .replace("/", "")
+                            .replace("{", "")
+                            .replace("}", "")
+                            .replace("[", "")
+                            .replace(":", "")
+                            .replace(" ", "_")
+                            .replace("]", "").toLowerCase();
+                        if (!homeName.isEmpty()) {
+                            setHomeValues(player, homeName);
+                            getPlugin().sendTitle(
+                                    (Player) sender,
+                                    5, 40, 10,
+                                    getPlugin().getLangFile().get((OfflinePlayer) sender, "info.home-set").replace("{home-name}", homeName),
+                                    ""
+                            );
+                        } else {
+                            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.invalid-name"));
+                        }
+                    } else {
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.invalid-name"));
+                    }
                 }
             } else {
-                sender.sendMessage(getPlugin().getLangFile().get("error.home-limit").replace("{max-homes}", String.valueOf(maxHomes)));
+                sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.home-limit").replace("{max-homes}", String.valueOf(maxHomes)));
             }
         }
         return true;
     }
 
-    private int getMaxHomes(CommandSender cmdSender, String permission) {
-        int returnValue = 5;
-        for (int c = 99; c > 0; c--) {
-            if (cmdSender.hasPermission(permission + "." + c)) {
-                returnValue = c;
-                break;
-            }
+    private void setHomeValues(Player player, String homeName) {
+        Home home = BkTeleport.getInstance().getHomesManager().getHome(player.getUniqueId(), homeName);
+        if (home != null) {
+            home.setLocation(player.getLocation());
+            home.saveValues();
         }
-        return returnValue;
-    }
-
-    private void setHomeValues(String homeName, CommandSender sender) {
-        Configuration configFile = getPlugin().getConfigManager().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
-        configFile.set("player", sender.getName());
-        configFile.setLocation("homes." + homeName, ((Player) sender).getLocation());
-        configFile.saveToFile();
     }
 }

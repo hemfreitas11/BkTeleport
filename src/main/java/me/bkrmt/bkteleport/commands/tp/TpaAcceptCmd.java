@@ -4,10 +4,11 @@ import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.request.ClickableRequest;
-import me.bkrmt.bkteleport.events.PlayerBkTeleportReplyEvent;
+import me.bkrmt.bkteleport.api.events.PlayerBkTeleportReplyEvent;
 import me.bkrmt.teleport.Teleport;
 import me.bkrmt.teleport.TeleportCore;
-import me.bkrmt.teleport.TeleportType;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,8 +21,8 @@ public class TpaAcceptCmd extends Executor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player requestTarget = (Player) sender;
-        if (!hasPermission(sender)) {
-            sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+        if (!hasPermission(sender) && !sender.hasPermission("bkteleport.player")) {
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
         } else {
             if (args.length == 0) {
                 for (Player inviter : getPlugin().getHandler().getMethodManager().getOnlinePlayers()) {
@@ -37,14 +38,13 @@ public class TpaAcceptCmd extends Executor {
             }
 
             if (args.length == 0) {
-                sender.sendMessage(getPlugin().getLangFile().get("error.no-pending-invite"));
+                sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-pending-invite"));
                 return true;
             }
 
             Player requestSender = Utils.getPlayer(args[0]);
-
             if (requestSender == null) {
-                requestTarget.sendMessage(getPlugin().getLangFile().get("error.not-online").replace("{player}", args[0]));
+                requestTarget.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.not-online").replace("{player}", args[0]));
             } else {
                 PlayerBkTeleportReplyEvent replyEvent = new PlayerBkTeleportReplyEvent((Player) sender, requestSender);
                 getPlugin().getServer().getPluginManager().callEvent(replyEvent);
@@ -52,36 +52,43 @@ public class TpaAcceptCmd extends Executor {
                 if (!replyEvent.isCancelled()) {
                     ClickableRequest tpHereRequest = ClickableRequest.getInteraction(TpHereCmd.TPHERE_IDENTIFIER, requestTarget.getUniqueId());
                     ClickableRequest tpaRequest = ClickableRequest.getInteraction(TpaCmd.TPA_IDENTIFIER, requestTarget.getUniqueId());
-
                     if ((tpHereRequest != null && tpHereRequest.getSender().getUniqueId().equals(requestSender.getUniqueId())) ||
                             (tpaRequest != null && tpaRequest.getSender().getUniqueId().equals(requestSender.getUniqueId()))) {
                         if (TeleportCore.INSTANCE.getPlayersInCooldown().get(requestSender.getName()) == null) {
                             if (TeleportCore.INSTANCE.getPlayersInCooldown().get(requestTarget.getName()) == null) {
-                                requestSender.sendMessage(getPlugin().getLangFile().get("info.invite-accepted.self").replace("{player}", requestTarget.getName()));
-                                requestTarget.sendMessage(getPlugin().getLangFile().get("info.invite-accepted.others").replace("{player}", requestSender.getName()));
+                                requestSender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "info.invite-accepted.self").replace("{player}", requestTarget.getName()));
+                                requestTarget.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "info.invite-accepted.others").replace("{player}", requestSender.getName()));
 
                                 if (tpHereRequest == null) {
                                     ClickableRequest.removeInteraction(TpaCmd.TPA_IDENTIFIER, requestTarget.getUniqueId());
-                                    new Teleport(getPlugin(), requestTarget, requestSender.getName(), TeleportType.Tpa);
+                                    startTeleport(requestTarget.getLocation(), requestSender, requestTarget.getName());
                                 } else {
                                     ClickableRequest.removeInteraction(TpHereCmd.TPHERE_IDENTIFIER, requestTarget.getUniqueId());
-                                    new Teleport(getPlugin(), requestSender, requestTarget.getName(), TeleportType.Tpa);
+                                    startTeleport(requestSender.getLocation(), requestTarget, requestSender.getName());
                                 }
                             } else {
-                                requestSender.sendMessage(getPlugin().getLangFile().get("error.already-waiting"));
+                                requestSender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.already-waiting"));
                                 cancelRequest(tpHereRequest, requestTarget);
                             }
                         } else {
-                            requestSender.sendMessage(getPlugin().getLangFile().get("error.other-already-waiting").replace("{player}", requestSender.getName()));
+                            requestSender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.other-already-waiting").replace("{player}", requestSender.getName()));
                             cancelRequest(tpHereRequest, requestTarget);
                         }
                     } else {
-                        sender.sendMessage(getPlugin().getLangFile().get("error.no-pending-invite"));
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-pending-invite"));
                     }
                 }
             }
         }
         return true;
+    }
+
+    private void startTeleport(Location location, Player player, String name) {
+        new Teleport(getPlugin(), player, getPlugin().getConfigManager().getConfig().getBoolean("teleport-countdown.cancel-on-move"))
+                .setLocation(name, location)
+                .setDuration(Utils.intFromPermission(player, 5, "bkteleport.countdown", new String[]{"bkteleport.countdown.0", "bkteleport.admin"}))
+                .setIsCancellable(true)
+                .startTeleport();
     }
 
     private void cancelRequest(ClickableRequest tpHere, Player player) {

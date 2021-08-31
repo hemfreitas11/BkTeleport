@@ -3,19 +3,18 @@ package me.bkrmt.bkteleport.commands.warp;
 import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
+import me.bkrmt.bkcore.config.Configuration;
 import me.bkrmt.bkteleport.PluginUtils;
-import me.bkrmt.bkteleport.UserType;
-import me.bkrmt.teleport.Teleport;
+import me.bkrmt.bkteleport.teleportable.Warp;
 import me.bkrmt.teleport.TeleportCore;
 import me.bkrmt.teleport.TeleportType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.inventory.Inventory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,8 +30,8 @@ public class WarpCmd extends Executor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!hasPermission(sender)) {
-            sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+        if (!hasPermission(sender) && !sender.hasPermission("bkteleport.player")) {
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
         } else {
             if (!(sender instanceof Player)) {
                 if (args.length == 2) {
@@ -40,45 +39,51 @@ public class WarpCmd extends Executor {
                 } else {
                     getPlugin().getLogger().log(Level.INFO, ChatColor.RED + "Use: /warp <warp-name> <player>");
                 }
-            }else if (args.length == 0) {
+            } else if (args.length == 0) {
                 sendWarps((Player) sender);
             } else if (args.length == 1) {
-                sendToWarp(sender, args, true);
+                if (args[0].equalsIgnoreCase(getPlugin().getLangFile().get((OfflinePlayer) sender, "commands.warp.subcommands.edit.command"))) {
+                    if (sender.hasPermission("bkteleport.admin")) PluginUtils.openWarpsGui((Player) sender, null, true);
+                    else sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
+                }
+                else sendToWarp(sender, args, true);
             } else if (args.length == 2) {
-                if (sender.hasPermission("bkteleport.warp.others")) {
+                if (sender.hasPermission("bkteleport.warp.others") || sender.hasPermission("bkteleport.admin")) {
                     sendOtherToWarp(sender, args);
                 } else {
-                    sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+                    sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
                 }
-            }
-            else {
+            } else {
                 sendUsage(sender);
             }
         }
         return true;
     }
-
+    
     private void sendOtherToWarp(CommandSender sender, String[] args) {
         Player target = Utils.getPlayer(args[1]);
         if (target != null) {
             sendToWarp(target, args, false);
         } else {
-            sender.sendMessage(getPlugin().getLangFile().get("error.player-not-found").replace("{player}", args[1]));
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.player-not-found").replace("{player}", args[1]));
         }
     }
 
     private void sendToWarp(CommandSender sender, String[] args, boolean checkPermission) {
-        if (!getPlugin().getFile("warps", args[0].toLowerCase() + ".yml").exists()) {
-            sender.sendMessage(getPlugin().getLangFile().get("error.unknown-warp").replace("{warp-name}", args[0]));
+        File warpFile = getPlugin().getFile("warps", args[0].toLowerCase() + ".yml");
+        if (!warpFile.exists()) {
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-warp").replace("{warp-name}", args[0]));
         } else {
-            if (!checkPermission || (sender.hasPermission("bkteleport.warp." + args[0].toLowerCase()) || sender.hasPermission("bkteleport.warp.*"))) {
+            Configuration warpConfig = new Configuration(getPlugin(), warpFile);
+            Warp warp = new Warp(warpConfig.getString("name"), warpConfig);
+            if (!checkPermission || (sender.hasPermission("bkteleport.warp." + warp.getName()) || sender.hasPermission("bkteleport.warp.*") || sender.hasPermission("bkteleport.admin"))) {
                 if (TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName()) == null) {
-                    new Teleport(getPlugin(), sender, args[0], TeleportType.Warp);
+                    warp.teleportToWarp((Player) sender);
                 } else {
-                    sender.sendMessage(getPlugin().getLangFile().get("error.already-waiting"));
+                    sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.already-waiting"));
                 }
             } else {
-                sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+                sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
             }
         }
     }
@@ -91,64 +96,53 @@ public class WarpCmd extends Executor {
                     )
             );
         } else {
-            File warpsFolder = new File(getPlugin().getDataFolder().getPath() + File.separator + "warps");
-
-            if (warpsFolder.listFiles().length > 0) {
-                File[] warps = warpsFolder.listFiles();
-                String[] keys;
-
-                List<String> tempList = new ArrayList<>();
-                for (File warp : warps) {
-                    String temp = YamlConfiguration.loadConfiguration(warp).getString("name");
-                    if (sender.hasPermission("bkteleport.warp." + temp)) {
-                        tempList.add(temp);
+            File warpsFolder = getPlugin().getFile("warps", "");
+            if (warpsFolder.exists()) {
+                File[] warpFiles = warpsFolder.listFiles();
+                if (warpFiles != null && warpFiles.length > 0) {
+                    List<Warp> warpsList = new ArrayList<>();
+                    for (File warpFile : warpFiles) {
+                        Configuration warpConfig = getPlugin().getConfigManager().getConfig("warps", warpFile.getName());
+                        if (warpConfig != null) {
+                            Warp warp = new Warp(warpConfig.getString("name"), warpConfig);
+                            if (sender.hasPermission("bkteleport.warp." + warp.getName()) || sender.hasPermission("bkteleport.warp.*") || sender.hasPermission("bkteleport.admin")) {
+                                warpsList.add(warp);
+                            }
+                        }
                     }
-                }
-                keys = tempList.toArray(new String[0]);
+                    if (warpsList.size() > 0) {
+                        if (getPlugin().getConfigManager().getConfig().getBoolean("warp-gui")) {
+                            PluginUtils.openWarpsGui(sender, warpsList, false);
+                        } else {
+                            TextComponent line = new TextComponent(Utils.translateColor(getPlugin().getLangFile().get(sender, "info.warp-list.start")));
+                            String commandString = getPlugin().getLangFile().get(sender, "commands.warp.command");
+                            List<String> allowedWarps = new ArrayList<>();
+                            for (Warp warp : warpsList) {
+                                if (sender.hasPermission("bkteleport.warp." + warp.getName()) || sender.hasPermission("bkteleport.warp.*") || sender.hasPermission("bkteleport.admin")) {
+                                    allowedWarps.add(warp.getName());
+                                }
+                            }
 
-                int warpAmount = keys.length;
-                if (warpAmount > 0) {
-                    if (getPlugin().getConfigManager().getConfig().getBoolean("warp-gui")) {
-                        Inventory warpsMenu = getPlugin().getServer().createInventory
-                                (
-                                        null,
-                                        (int) Math.ceil((double) warpAmount / 9) * 9,
-                                        getPlugin().getLangFile().get("info.warp-list-title")
-                                );
+                            Iterator<String> iterator = allowedWarps.iterator();
+                            while (iterator.hasNext()) {
+                                String warpName = iterator.next();
+                                line.addExtra(PluginUtils.getTextComponent(commandString, warpName, false, TeleportType.Warp));
+                                if (iterator.hasNext()) {
+                                    line.addExtra(Utils.translateColor(getPlugin().getLangFile().get(sender, "info.warp-list.separator")));
+                                }
+                            }
+                            line.addExtra(Utils.translateColor(getPlugin().getLangFile().get(sender, "info.warp-list.end")));
 
-                        for (int c = 0; c < warpAmount; c++) {
-                            warpsMenu.setItem(c, Utils.createItem(getPlugin(), ChatColor.translateAlternateColorCodes('&', "&7&l&o" + keys[c]),
-                                    getPlugin().getHandler().getItemManager().getSign(),
-                                    ChatColor.translateAlternateColorCodes('&', "&7&o/warp " + keys[c])));
+                            sender.spigot().sendMessage(line);
                         }
-                        sender.openInventory(warpsMenu);
                     } else {
-                        TextComponent line = new TextComponent(Utils.translateColor(getPlugin().getLangFile().get("info.warp-list.start")));
-                        String commandString = getPlugin().getLangFile().get("commands.warp.command");
-                        List<String> allowedWarps = new ArrayList<>();
-                        for (String warpName : keys) {
-                            if (sender.hasPermission("bkteleport.warp." + warpName)) {
-                                allowedWarps.add(warpName);
-                            }
-                        }
-
-                        Iterator<String> it = allowedWarps.iterator();
-                        while (it.hasNext()) {
-                            String warpName = it.next();
-                            line.addExtra(PluginUtils.getTextComponent(commandString, warpName, UserType.User, TeleportType.Warp));
-                            if (it.hasNext()) {
-                                line.addExtra(Utils.translateColor(getPlugin().getLangFile().get("info.home-list.separator")));
-                            }
-                        }
-                        line.addExtra(Utils.translateColor(getPlugin().getLangFile().get("info.home-list.end")));
-
-                        sender.spigot().sendMessage(line);
+                        sender.sendMessage(getPlugin().getLangFile().get(sender, "error.warps-empty"));
                     }
                 } else {
-                    sender.sendMessage(getPlugin().getLangFile().get("error.no-warps"));
+                    sender.sendMessage(getPlugin().getLangFile().get(sender, "error.warps-empty"));
                 }
             } else {
-                sender.sendMessage(getPlugin().getLangFile().get("error.no-warps"));
+                sender.sendMessage(getPlugin().getLangFile().get(sender, "error.warps-empty"));
             }
         }
     }

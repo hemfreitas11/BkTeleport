@@ -15,6 +15,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <repositories>
@@ -39,16 +40,25 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -57,8 +67,8 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-<!--                            <outputFile>D:/Servidores/encomenda-server/plugins/${build.finalName}.jar</outputFile>-->
-                            <outputFile>D:/Servidores/svteste/plugins/${build.finalName}.jar</outputFile>
+<!--                            <outputFile>D:/Servidores/encomenda-server/plugins/${project.build.finalName}.jar</outputFile>-->
+                            <outputFile>D:/Servidores/svteste/plugins/${project.build.finalName}.jar</outputFile>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -74,7 +84,7 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>me.bkrmt.teleport</pattern>
-                                    <shadedPattern>me.bkrmt.${project.artifactId}.bkcore.teleport</shadedPattern>
+                                    <shadedPattern>me.bkrmt.${project.artifactId}.teleport</shadedPattern>
                                     <excludes>
                                         <exclude>me.bkrmt.teleport.events.PlayerBkTeleportCountStartEvent</exclude>
                                         <exclude>me.bkrmt.teleport.events.PlayerBkTeleportEvent</exclude>
@@ -117,15 +127,40 @@
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>me.bkrmt.bkcore</groupId>
             <artifactId>teleport</artifactId>
+            <version>1.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>request</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.bkrmt.bkcore</groupId>
-            <artifactId>menu</artifactId>
+            <artifactId>bkgui</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>pagedlist</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>textanimator</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>input</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
@@ -173,21 +208,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>me.bkrmt.bkcore</groupId>
-            <artifactId>request</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.bkrmt.bkcore</groupId>
-            <artifactId>pagedlist</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>me.bkrmt</groupId>
-            <artifactId>opengui</artifactId>
-            <version>1.2</version>
+            <artifactId>v1_16_R1</artifactId>
+            <version>v1_16_R1</version>
+            <type>jar</type>
             <scope>compile</scope>
         </dependency>
     </dependencies>

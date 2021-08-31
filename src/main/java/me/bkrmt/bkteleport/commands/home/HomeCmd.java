@@ -4,12 +4,11 @@ import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.config.Configuration;
+import me.bkrmt.bkteleport.BkTeleport;
 import me.bkrmt.bkteleport.HomeType;
 import me.bkrmt.bkteleport.PluginUtils;
-import me.bkrmt.bkteleport.UserType;
-import me.bkrmt.teleport.Teleport;
-import me.bkrmt.teleport.TeleportCore;
-import me.bkrmt.teleport.TeleportType;
+import me.bkrmt.bkteleport.teleportable.Home;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,26 +23,29 @@ public class HomeCmd extends Executor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        if (!hasPermission(sender)) {
-            sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+        Player player = (Player) sender;
+        if (!hasPermission(sender) && !sender.hasPermission("bkteleport.player")) {
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
         } else {
             if (args.length == 1 && args[0].contains(":")) {
-                if (sender.hasPermission("bkteleport.spy.home")) {
+                if (sender.hasPermission("bkteleport.spy.home") || sender.hasPermission("bkteleport.admin")) {
                     String[] spy = args[0].split(":");
                     if (spy.length == 0) {
-                        sender.sendMessage(getPlugin().getLangFile().get("error.wrong-spy-format"));
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.wrong-spy-format"));
                         return true;
                     }
                     Player spied = Utils.getPlayer(spy[0]);
                     String spiedFile = null;
                     if (spied == null) {
-                        for (File homesFile : new File(getPlugin().getDataFolder().getPath() + File.separator + "userdata").listFiles()) {
-                            Configuration tempConfig = getPlugin().getConfigManager().getConfig("userdata", homesFile.getName());
-                            if (tempConfig.getString("player") != null) {
-                                if (tempConfig.getString("player").equalsIgnoreCase(spy[0])) {
-                                    spiedFile = homesFile.getName();
-                                    break;
+                        File[] homeFiles = new File(getPlugin().getDataFolder().getPath() + File.separator + "userdata").listFiles();
+                        if (homeFiles != null) {
+                            for (File homeFile : homeFiles) {
+                                Configuration tempConfig = getPlugin().getConfigManager().getConfig("userdata", homeFile.getName());
+                                if (tempConfig.getString("player") != null) {
+                                    if (tempConfig.getString("player").equalsIgnoreCase(spy[0])) {
+                                        spiedFile = homeFile.getName();
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -51,7 +53,7 @@ public class HomeCmd extends Executor {
 
                     if (spiedFile == null && spied != null) spiedFile = spied.getUniqueId().toString() + ".yml";
                     else if (spiedFile == null) {
-                        sender.sendMessage(getPlugin().getLangFile().get("error.homes-not-found").replace("{player}", spy[0]));
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.homes-not-found").replace("{player}", spy[0]));
                         return true;
                     }
                     if (spy.length == 2) {
@@ -60,36 +62,32 @@ public class HomeCmd extends Executor {
                             if (spyConfigFile.get("homes." + spy[1]) != null) {
                                 ((Player) sender).teleport(spyConfigFile.getLocation("homes." + spy[1]));
                             } else {
-                                sender.sendMessage(getPlugin().getLangFile().get("error.unknown-home-spy").replace("{player}", spy[0]).replace("{home-name}", spy[1]));
+                                sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home-spy").replace("{player}", spy[0]).replace("{home-name}", spy[1]));
                             }
                         } else {
-                            sender.sendMessage(getPlugin().getLangFile().get("error.unknown-home-spy").replace("{player}", spy[0]).replace("{home-name}", spy[1]));
+                            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home-spy").replace("{player}", spy[0]).replace("{home-name}", spy[1]));
                         }
                     } else if (spy.length == 1) {
-                        PluginUtils.sendHomes(UserType.Spy, HomeType.Home, getPlugin().getFile("userdata", spiedFile), sender);
+                        PluginUtils.sendHomes(HomeType.Home, getPlugin().getFile("userdata", spiedFile), sender, true);
                     } else {
-                        sender.sendMessage(getPlugin().getLangFile().get("error.wrong-spy-format"));
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.wrong-spy-format"));
                     }
                 } else {
-                    sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+                    sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
                 }
             } else if (args.length == 1) {
                 if (!getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml").exists()) {
-                    sender.sendMessage(getPlugin().getLangFile().get("error.unknown-home").replace("{home-name}", args[0]));
+                    sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home").replace("{home-name}", args[0]));
                 } else {
-                    Configuration configFile = getPlugin().getConfigManager().getConfig("userdata", ((Player) sender).getUniqueId().toString() + ".yml");
-                    if (configFile.get("homes." + args[0]) != null) {
-                        if (TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName()) == null || !TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName())) {
-                            new Teleport(getPlugin(), sender, args[0], TeleportType.Home);
-                        } else {
-                            sender.sendMessage(getPlugin().getLangFile().get("error.already-waiting"));
-                        }
+                    Home home = BkTeleport.getInstance().getHomesManager().getHome(player.getUniqueId(), args[0]);
+                    if (home != null && home.getLocation() != null) {
+                        home.teleportToHome(player);
                     } else {
-                        sender.sendMessage(getPlugin().getLangFile().get("error.unknown-home").replace("{home-name}", args[0]));
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home").replace("{home-name}", args[0]));
                     }
                 }
             } else if (args.length == 0) {
-                PluginUtils.sendHomes(UserType.User, HomeType.Home, getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml"), sender);
+                PluginUtils.sendHomes(HomeType.Home, getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml"), sender, false);
             } else {
                 sendUsage(sender);
             }

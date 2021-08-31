@@ -1,15 +1,21 @@
 package me.bkrmt.bkteleport;
 
 import me.bkrmt.bkcore.BkPlugin;
+import me.bkrmt.bkcore.bkgui.BkGUI;
 import me.bkrmt.bkcore.command.CommandModule;
+import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.command.HelpCmd;
 import me.bkrmt.bkcore.command.ReloadCmd;
-import me.bkrmt.bkcore.message.InternalMessages;
+import me.bkrmt.bkcore.config.ConfigType;
+import me.bkrmt.bkcore.config.Configuration;
 import me.bkrmt.bkcore.textanimator.AnimatorManager;
+import me.bkrmt.bkteleport.commands.BackCmd;
 import me.bkrmt.bkteleport.commands.CommandHandler;
 import me.bkrmt.bkteleport.commands.home.DelHomeCmd;
 import me.bkrmt.bkteleport.commands.home.HomeCmd;
 import me.bkrmt.bkteleport.commands.home.SetHomeCmd;
+import me.bkrmt.bkteleport.commands.spawn.SetSpawnCmd;
+import me.bkrmt.bkteleport.commands.spawn.SpawnCmd;
 import me.bkrmt.bkteleport.commands.tp.TpHereCmd;
 import me.bkrmt.bkteleport.commands.tp.TpaAcceptCmd;
 import me.bkrmt.bkteleport.commands.tp.TpaCmd;
@@ -17,11 +23,19 @@ import me.bkrmt.bkteleport.commands.tp.TpaDenyCmd;
 import me.bkrmt.bkteleport.commands.warp.DelWarpCmd;
 import me.bkrmt.bkteleport.commands.warp.SetWarpCmd;
 import me.bkrmt.bkteleport.commands.warp.WarpCmd;
-import me.bkrmt.opengui.OpenGUI;
 import me.bkrmt.teleport.TeleportCore;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.StringUtil;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +45,7 @@ import java.util.logging.Level;
 
 public final class BkTeleport extends BkPlugin {
     private static BkTeleport plugin;
+    private HomesManager homesManager;
     private Hashtable<String, List<String>> commands;
     private AnimatorManager animatorManager;
 
@@ -39,26 +54,77 @@ public final class BkTeleport extends BkPlugin {
         plugin = this;
         start(true);
         setRunning(true);
-        OpenGUI.INSTANCE.register(this);
+
+        sendConsoleMessage("§6__________ __   §e_________     __                               __");
+        sendConsoleMessage("§6\\______   \\  | _§e\\__  ___/___ |  |   ____ ______   ____________/  |_");
+        sendConsoleMessage("§6 |    |  _/  |/ / §e|  |_/ __ \\|  | _/ __ \\|   _ \\ /  _ \\_  __ \\   __\\");
+        sendConsoleMessage("§6 |    |   \\    <  §e|  |\\  ___/|  |_\\  ___/|  |_| >  |_| )  | \\/|  |");
+        sendConsoleMessage("§6 |______  /__|_ \\ §e|__| \\___  >____/\\___  >   __/ \\____/|__|   |__|");
+        sendConsoleMessage("§6        \\/     \\/§e          \\/          \\/|__|");
+        sendConsoleMessage("");
+        sendConsoleMessage("                 §6© BkPlugins | discord.io/bkplugins");
+        sendConsoleMessage("");
+        sendConsoleMessage(me.bkrmt.bkteleport.InternalMessages.PLUGIN_STARTING.getMessage(this));
+
+        File warpsFolder = getFile("", "warps");
+        if (!warpsFolder.exists()) warpsFolder.mkdir();
+        File homesFolder = getFile("", "userdata");
+        if (!homesFolder.exists()) homesFolder.mkdir();
+
+        if (getConfigManager().getConfig().getBoolean("essentials.import-from-essentials")) {
+            copyFromEss("warps");
+            copyFromEss("userdata");
+        }
+
+        sendConsoleMessage(me.bkrmt.bkteleport.InternalMessages.LOADING_WARPS.getMessage(this));
+        getConfigManager().loadAllFromFolder(warpsFolder, ConfigType.CONFIG);
+        int warpsSize = warpsFolder.listFiles() == null ? 0 : warpsFolder.listFiles().length;
+        sendConsoleMessage(me.bkrmt.bkteleport.InternalMessages.LOADED_WARPS.getMessage(this).replace("{0}", String.valueOf(warpsSize)));/*
+        sendConsoleMessage(me.bkrmt.bkteleport.InternalMessages.LOADING_HOMES.getMessage(this));
+        getConfigManager().loadAllFromFolder(homesFolder, ConfigType.PLAYER_DATA);
+        int homesSize = homesFolder.listFiles() == null ? 0 : homesFolder.listFiles().length;
+        sendConsoleMessage(me.bkrmt.bkteleport.InternalMessages.LOADED_HOMES.getMessage(this).replace("{0}", String.valueOf(homesSize)));*/
+
+        homesManager = new HomesManager();
+
+        BkGUI.INSTANCE.register(this);
         animatorManager = new AnimatorManager(this);
         getCommandMapper()
                 .addCommand(new CommandModule(new HelpCmd(plugin, "bkteleport", ""), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new ReloadCmd(plugin, "tpreload", "bkteleport.reload"), (a, b, c, d) -> Collections.singletonList("")))
-                .addCommand(new CommandModule(new TpaCmd(plugin, "tpa", "bkteleport.tpa"), null))
-                .addCommand(new CommandModule(new TpHereCmd(plugin, "tpahere", "bkteleport.tpahere"), null))
-                .addCommand(new CommandModule(new TpaAcceptCmd(plugin, "tpaccept", "bkteleport.tpaccept"), null))
-                .addCommand(new CommandModule(new TpaDenyCmd(plugin, "tpdeny", "bkteleport.tpdeny"), null))
+                .addCommand(new CommandModule(new SpawnCmd(plugin, "spawn", "bkteleport.spawn"), null))
+                .addCommand(new CommandModule(new SetSpawnCmd(plugin, "setspawn", "bkteleport.setspawn"), (a, b, c, d) -> Collections.singletonList("")))
+                .addCommand(new CommandModule(new BackCmd(plugin, "back", "bkteleport.back"), (a, b, c, d) -> Collections.singletonList("")))
+                .addCommand(new CommandModule(new TpaCmd(plugin, "tpa", "bkteleport.tpa"), (sender, b, c, args) -> tpaCompleter(args, sender)))
+                .addCommand(new CommandModule(new TpHereCmd(plugin, "tpahere", "bkteleport.tpahere"), (sender, b, c, args) -> tpaCompleter(args, sender)))
+                .addCommand(new CommandModule(new TpaAcceptCmd(plugin, "tpaccept", "bkteleport.tpaccept"), (sender, b, c, args) -> tpaCompleter(args, sender)))
+                .addCommand(new CommandModule(new TpaDenyCmd(plugin, "tpdeny", "bkteleport.tpdeny"), (sender, b, c, args) -> tpaCompleter(args, sender)))
                 .addCommand(new CommandModule(new SetHomeCmd(plugin, "sethome", "bkteleport.sethome"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new DelHomeCmd(plugin, "delhome", "bkteleport.delhome"), (sender, b, c, args) -> homesTabCompleter(args, sender)))
                 .addCommand(new CommandModule(new HomeCmd(plugin, "home", "bkteleport.home"), (sender, b, c, args) -> homesTabCompleter(args, sender)))
                 .addCommand(new CommandModule(new HomeCmd(plugin, "homes", "bkteleport.home"), (a, b, c, d) -> Collections.singletonList("")))
-                .addCommand(new CommandModule(new WarpCmd(plugin, "warp", "bkteleport.warp"), (sender, b, c, args) -> warpsTabCompleter(args, sender)))
-                .addCommand(new CommandModule(new WarpCmd(plugin, "warps", "bkteleport.warps"), (a, b, c, d) -> Collections.singletonList("")))
+                .addCommand(new CommandModule(new WarpCmd(plugin, "warp", "bkteleport.warp"), (sender, b, c, args) -> warpsTabCompleter("warp", args, sender)))
+                .addCommand(new CommandModule(new WarpCmd(plugin, "warps", "bkteleport.warps"), (sender, b, c, args) -> warpsTabCompleter("warps", args, sender)))
                 .addCommand(new CommandModule(new SetWarpCmd(plugin, "setwarp", "bkteleport.setwarp"), (a, b, c, d) -> Collections.singletonList("")))
-                .addCommand(new CommandModule(new DelWarpCmd(plugin, "delwarp", "bkteleport.delwarp"), (sender, b, c, args) -> warpsTabCompleter(args, sender)))
-                .registerAll();
+                .addCommand(new CommandModule(new DelWarpCmd(plugin, "delwarp", "bkteleport.delwarp"), (sender, b, c, args) -> warpsTabCompleter("warp", args, sender)));
+        if (getLangFile().getLanguage().equalsIgnoreCase("pt_BR"))
+            getCommandMapper().addCommand(
+                    new CommandModule(
+                            new Executor(this, "home.comando-ingles-nao-mudar", "bkteleport.home") {
+                                @Override
+                                public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+                                    return true;
+                                }
+                            }, (sender, b, c, args) -> homesTabCompleter(args, sender)
+                    )
+            );
+
+        getCommandMapper().registerAll();
 
         commands = new Hashtable<>();
+        commands.put("spawn", getConfigManager().getConfig().getStringList("commands.spawn"));
+        commands.put("setspawn", getConfigManager().getConfig().getStringList("commands.setspawn"));
+        commands.put("back", getConfigManager().getConfig().getStringList("commands.back"));
         commands.put("tpa", getConfigManager().getConfig().getStringList("commands.tpa"));
         commands.put("tpahere", getConfigManager().getConfig().getStringList("commands.tpahere"));
         commands.put("tpaccept", getConfigManager().getConfig().getStringList("commands.tpaccept"));
@@ -72,27 +138,91 @@ public final class BkTeleport extends BkPlugin {
         commands.put("setwarp", getConfigManager().getConfig().getStringList("commands.setwarp"));
         commands.put("delwarp", getConfigManager().getConfig().getStringList("commands.delwarp"));
 
-//        getServer().getPluginManager().registerEvents(new ButtonFunctions(), this);
         getServer().getPluginManager().registerEvents(new CommandHandler(), this);
 
-        File warpsFolder = getFile("", "warps");
-        if (!warpsFolder.exists()) warpsFolder.mkdir();
-        File homesFolder = getFile("", "userdata");
-        if (!homesFolder.exists()) homesFolder.mkdir();
+        getServer().getPluginManager().registerEvents(new Listener() {
+            @EventHandler(priority = EventPriority.LOWEST)
+            public void onJoin(PlayerSpawnLocationEvent event) {
+                if (getConfigManager().getConfig().getBoolean("spawn.spawn-on-join")) {
+                    Player player = event.getPlayer();
+                    File spawnFile = plugin.getFile("warps", "spawn.yml");
+                    if (!spawnFile.exists()) {
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(BkTeleport.getInstance(), () -> {
+                                    if (player.isOnline()) {
+                                        player.sendMessage(plugin.getLangFile().get(player, "error.invalid-spawn"));
+                                    }
+                                }, 20
+                        );
+                    } else {
+                        Configuration spawnConfig = new Configuration(plugin, spawnFile);
+                        Location spawnLocation = spawnConfig.getLocation("");
+                        if (spawnLocation != null) {
+                            event.setSpawnLocation(spawnLocation);
+                        } else {
+                            Bukkit.getScheduler().runTaskLaterAsynchronously(BkTeleport.getInstance(), () -> {
+                                        if (player.isOnline()) {
+                                            player.sendMessage(plugin.getLangFile().get(player, "error.invalid-spawn"));
+                                        }
+                                    }, 20
+                            );
+                        }
+                    }
+                }
+            }
+
+            @EventHandler(priority = EventPriority.LOWEST)
+            public void onJoin(PlayerRespawnEvent event) {
+                if (getConfigManager().getConfig().getBoolean("spawn.spawn-on-respawn")) {
+                    Player player = event.getPlayer();
+                    File spawnFile = plugin.getFile("warps", "spawn.yml");
+                    if (!spawnFile.exists()) {
+                        player.sendMessage(plugin.getLangFile().get(player, "error.invalid-spawn"));
+                    } else {
+                        Configuration spawnConfig = new Configuration(plugin, spawnFile);
+                        Location spawnLocation = spawnConfig.getLocation("");
+                        if (spawnLocation != null) {
+                            event.setRespawnLocation(spawnLocation);
+                        } else {
+                            player.sendMessage(plugin.getLangFile().get(player, "error.invalid-spawn"));
+                        }
+                    }
+                }
+            }
+        }, this);
 
         if (TeleportCore.INSTANCE.getPlayersInCooldown().get("Core-Started") == null)
             TeleportCore.INSTANCE.start(this);
 
-        if (getConfigManager().getConfig().getBoolean("import-from-essentials")) {
-            copyFromEss("warps");
-            copyFromEss("userdata");
-        }
+        if (getConfigManager().getConfig().getBoolean("essentials.save-warps-to-essentials")) copyToEss();
 
+        sendConsoleMessage(me.bkrmt.bkteleport.InternalMessages.PLUGIN_STARTED.getMessage(this));
     }
 
     @Override
     public void onDisable() {
         getConfigManager().saveConfigs();
+    }
+
+    private void copyToEss() {
+        File essFolder = new File("plugins" + File.separatorChar + "Essentials");
+        if (essFolder.exists()) {
+            File warpsFolder = getFile("warps", "");
+            if (warpsFolder.exists()) {
+                File[] files = warpsFolder.listFiles();
+                if (files != null && files.length > 0) {
+                    for (File warpFile : files) {
+                        try {
+                            File destFile = new File("plugins" + File.separatorChar + "Essentials" + File.separator + "warps" + File.separator + warpFile.getName());
+                            if (!destFile.exists()) {
+                                Files.copy(warpFile.toPath(), destFile.toPath());
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void copyFromEss(String essFolderName) {
@@ -106,7 +236,7 @@ public final class BkTeleport extends BkPlugin {
                         File destFile = (new File(getDataFolder().getPath() + File.separator + essFolderName + File.separator + file.getName()));
                         if (!destFile.exists()) {
                             if (!warned) {
-                                String infoMessage = destFile.getPath().contains("userdata") ? InternalMessages.ESS_COPY_HOME.getMessage().replace("{0}", getName()) : InternalMessages.ESS_COPY_WARPS.getMessage().replace("{0}", getName());
+                                String infoMessage = destFile.getPath().contains("userdata") ? me.bkrmt.bkteleport.InternalMessages.ESS_COPY_HOME.getMessage(this).replace("{0}", getName()) : me.bkrmt.bkteleport.InternalMessages.ESS_COPY_WARPS.getMessage(this).replace("{0}", getName());
                                 getServer().getLogger().log(Level.INFO, infoMessage);
                                 warned = true;
                             }
@@ -117,9 +247,13 @@ public final class BkTeleport extends BkPlugin {
                     }
                 }
                 if (warned)
-                    getServer().getLogger().log(Level.INFO, InternalMessages.ESS_COPY_DONE.getMessage().replace("{0}", getName()));
+                    getServer().getLogger().log(Level.INFO, me.bkrmt.bkteleport.InternalMessages.ESS_COPY_DONE.getMessage(this).replace("{0}", getName()));
             }
         }
+    }
+
+    public HomesManager getHomesManager() {
+        return homesManager;
     }
 
     @Override
@@ -135,13 +269,16 @@ public final class BkTeleport extends BkPlugin {
         return commands;
     }
 
-    private List<String> warpsTabCompleter(String[] args, CommandSender sender) {
+    private List<String> warpsTabCompleter(String command, String[] args, CommandSender sender) {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             String partialCommand = args[0];
-            List<String> warps = Arrays.asList(PluginUtils.getWarps());
+
+            List<String> warps = new ArrayList<>();
+            if (getCommands().get("warp").contains("/" + command)) warps.addAll(Arrays.asList(PluginUtils.getWarps()));
+            warps.add(plugin.getLangFile().get((OfflinePlayer) sender, "commands.warp.subcommands.edit.command"));
             StringUtil.copyPartialMatches(partialCommand, warps, completions);
-        } else if (args.length == 2 && sender.hasPermission("bkteleport.warp.others")) {
+        } else if (getCommands().get("warp").contains("/" + command) && args.length == 2 && (sender.hasPermission("bkteleport.warp.others") || sender.hasPermission("bkteleport.admin"))) {
             String partialPlayer = args[1];
             List<String> playerList = new ArrayList<>();
             for (Player player : plugin.getHandler().getMethodManager().getOnlinePlayers()) {
@@ -149,19 +286,40 @@ public final class BkTeleport extends BkPlugin {
             }
             StringUtil.copyPartialMatches(partialPlayer, playerList, completions);
         }
-        completions.removeIf(completion -> !sender.hasPermission("bkteleport.warp.*") && !sender.hasPermission("bkteleport.warp." + completion));
-        Collections.sort(completions);
+        if (getCommands().get("warp").contains("/" + command)) {
+            completions.removeIf(completion -> (!sender.hasPermission("bkteleport.warp.*") && !sender.hasPermission("bkteleport.admin")) && !sender.hasPermission("bkteleport.warp." + completion));
+            Collections.sort(completions);
+        }
         return completions;
 
     }
 
     private List<String> homesTabCompleter(String[] args, CommandSender sender) {
         List<String> completions = new ArrayList<>();
-        if (sender.hasPermission("bkteleport.home")) {
+        if (sender.hasPermission("bkteleport.home") || sender.hasPermission("bkteleport.player")) {
             if (args.length == 1) {
                 String partialCommand = args[0];
                 List<String> homes = Arrays.asList(PluginUtils.getHomes(((Player) sender)));
                 StringUtil.copyPartialMatches(partialCommand, homes, completions);
+            }
+        }
+        Collections.sort(completions);
+
+        return completions;
+    }
+
+    private List<String> tpaCompleter(String[] args, CommandSender sender) {
+        List<String> completions = new ArrayList<>();
+        if (sender.hasPermission("bkteleport.home") || sender.hasPermission("bkteleport.player")) {
+            if (args.length == 1) {
+                String partialCommand = args[0];
+
+                List<String> validPlayers = new ArrayList<>();
+
+                for (Player player : getHandler().getMethodManager().getOnlinePlayers()) {
+                    if (!player.getName().equalsIgnoreCase(sender.getName())) validPlayers.add(player.getName());
+                }
+                StringUtil.copyPartialMatches(partialCommand, validPlayers, completions);
             }
         }
         Collections.sort(completions);

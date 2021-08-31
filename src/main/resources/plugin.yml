@@ -2,5 +2,7 @@ name: BkTeleport
 version: ${project.version}
 main: me.bkrmt.bkteleport.BkTeleport
 api-version: 1.13
+softdepend:
+  - PlaceholderAPI
 authors: [Bkr__]
 description: 'Replacement for essentials teleport'

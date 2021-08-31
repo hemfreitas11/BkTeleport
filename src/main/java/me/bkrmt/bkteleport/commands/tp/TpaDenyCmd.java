@@ -4,7 +4,8 @@ import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.request.ClickableRequest;
-import me.bkrmt.bkteleport.events.PlayerBkTeleportReplyEvent;
+import me.bkrmt.bkteleport.api.events.PlayerBkTeleportReplyEvent;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ public class TpaDenyCmd extends Executor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!hasPermission(sender)) {
-            sender.sendMessage(getPlugin().getLangFile().get("error.no-permission"));
+        if (!hasPermission(sender) && !sender.hasPermission("bkteleport.player")) {
+            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
         } else {
             Player requestTarget = (Player) sender;
             if (args.length == 0) {
@@ -36,14 +37,14 @@ public class TpaDenyCmd extends Executor {
             }
 
             if (args.length == 0) {
-                sender.sendMessage(getPlugin().getLangFile().get("error.no-pending-invite"));
+                sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-pending-invite"));
                 return true;
             }
 
             Player requestSender = Utils.getPlayer(args[0]);
 
             if (requestSender == null) {
-                requestTarget.sendMessage(getPlugin().getLangFile().get("error.not-online").replace("{player}", args[0]));
+                requestTarget.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.not-online").replace("{player}", args[0]));
             } else {
                 PlayerBkTeleportReplyEvent replyEvent = new PlayerBkTeleportReplyEvent((Player) sender, requestSender);
                 getPlugin().getServer().getPluginManager().callEvent(replyEvent);
@@ -61,10 +62,10 @@ public class TpaDenyCmd extends Executor {
                         }
 
                         requestSender.playSound(requestSender.getLocation(), getPlugin().getHandler().getSoundManager().getPling(), 15, 0.5f);
-                        requestSender.sendMessage(getPlugin().getLangFile().get("error.invite-denied").replace("{player}", requestTarget.getName()));
-                        requestTarget.sendMessage(getPlugin().getLangFile().get("info.invite-denied").replace("{player}", requestSender.getName()));
+                        requestSender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.invite-denied").replace("{player}", requestTarget.getName()));
+                        requestTarget.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "info.invite-denied").replace("{player}", requestSender.getName()));
                     } else {
-                        sender.sendMessage(getPlugin().getLangFile().get("error.no-pending-invite"));
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-pending-invite"));
                     }
                 }
             }
