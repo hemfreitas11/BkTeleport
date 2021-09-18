@@ -27,16 +27,21 @@ commands:
   usage-format: '&cUsage: {usage}'
 
   #BkTeleport Command
-  bkteleport:
+  # This command can't be changed, it's only here for the help command
+  bkcommand:
     command: 'bkteleport'
-    description: 'Shows the help of the plugin.'
-    usage: '/bkteleport'
-
-  #Reload Command
-  tpreload:
-    command: 'tpreload'
-    description: 'Updates all the configs and messages of the plugin.'
-    usage: '/tpreload'
+    description: 'Help of the plugin.'
+    usage: '/bkteleport [config | messages | reload]'
+    subcommands:
+      config:
+        command: 'config'
+        usage: '/bkteleport config'
+      reload:
+        command: 'reload'
+        usage: '/bkteleport reload'
+      messages:
+        command: 'messages'
+        usage: '/bkteleport messages'
 
   #Back Command
   back:
@@ -83,7 +88,7 @@ commands:
   #Home Command
   home:
     command: 'home'
-    description: 'Teleports to your home.'
+    description: 'Teleports to or edits homes.'
     usage: '/home <home-name>'
 
   #Homes Command
@@ -107,7 +112,7 @@ commands:
   #Warp Command
   warp:
     command: 'warp'
-    description: 'Teleports to a warp.'
+    description: 'Teleports to or edits warps.'
     usage: '/warp <warp-name | edit>'
     subcommands:
       edit:
@@ -263,13 +268,13 @@ homes-menu:
         - ' '
         - '&7Deletes this home.'
         - '&7You will be asked to confirm.'
-        
+
 warps-menu:
   title: '&8&lServer warps {current-page}/{total-pages}'
   default-warp-name: '&e/warp &6{shine gold text[{warp-name}]}'
   default-warp-lore:
-  - ' '
-  - '&6Change me with the command /warp edit!'
+    - ' '
+    - '&6Change me with the command /warp edit!'
   edit-menu:
     button:
       enable:
@@ -383,7 +388,7 @@ warps-menu:
         - ' '
         - '&7Deletes this warp.'
         - '&7You will be asked to confirm.'
-        
+
 gui-buttons:
   next-page:
     name: '{shine green bold}Next Page'
@@ -420,6 +425,17 @@ info:
   deleted:
     warp: '&aWarp deleted.'
     home: '&aHome deleted.'
+  number-input:
+    go-back:
+      - '&7Click here to confirm and go back.'
+    increase:
+      name: '&7&lIncrease {amount}'
+      description:
+        - '&7Click to increase {amount}'
+    decrease:
+      name: '&7&lDecrease {amount}'
+      description:
+        - '&7Click to decrease {amount}'
   name-set: '&aNew display name set!'
   visibility:
     set-public: '&eYour home is now public!'
@@ -431,7 +447,7 @@ info:
   location-set: '&aNew location set!'
   item-set: '&aNew display item set!'
   input-canceled: '&eInput cancelled.'
-  configs-reloaded: '&aAll the configs acnd messages have been reloaded!'
+  configs-reloaded: '&aAll the configs and messages have been reloaded!'
   spying: '&5&oSpying: {player}'
   invulnerable-remaining: '&cInvulnerable for {seconds} seconds'
   home-list-title: '&8&lHomes'
@@ -512,7 +528,7 @@ error:
   no-homes: '&eYou don''t have any homes. Type /sethome <name> to set one.'
   homes-not-found: '&cThe homes of the player &4{player} &cwere not found.'
   no-home-spy: '&cThis player doesn''t have any homes.'
-  warps-empty: '&eThe server didnt set any warps or you don''t have permission to see them.'
+  warps-empty: '&eThe server didn''t set any warps or you don''t have permission to see them.'
   other-already-waiting: '&cThe player &4{player} &cis already waiting a teleport. Request canceled.'
   already-waiting: '&cYou are already waiting a teleport.'
   no-pending-invite: '&cThis teleport request doesn''t exist anymore.'

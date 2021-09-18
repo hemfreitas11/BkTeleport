@@ -8,6 +8,8 @@ import me.bkrmt.bkcore.bkgui.gui.Rows;
 import me.bkrmt.bkcore.bkgui.item.ItemBuilder;
 import me.bkrmt.bkcore.config.Configuration;
 import me.bkrmt.bkcore.request.ClickableRequest;
+import me.bkrmt.bkcore.xlibs.XMaterial;
+import me.bkrmt.bkcore.xlibs.XSound;
 import me.bkrmt.bkteleport.edit.options.home.NewHome;
 import me.bkrmt.bkteleport.teleportable.Home;
 import me.bkrmt.bkteleport.teleportable.PagedOptions;
@@ -197,7 +199,7 @@ public class PluginUtils {
                     request.getTarget().sendMessage(plugin.getLangFile().get(sender, "error.invite-expired.self").replace("{player}", sender.getName()));
                 })
                 .sendRequest();
-        target.playSound(target.getLocation(), plugin.getHandler().getSoundManager().getPling(), 15, 1);
+        XSound.BLOCK_NOTE_BLOCK_PLING.play(target, 15, 1);
         sender.sendMessage(plugin.getLangFile().get(sender, "info.sent-invite").replace("{player}", target.getName()));
     }
 
@@ -273,11 +275,11 @@ public class PluginUtils {
     private static void setEditButton(Player sender, PagedList homesList) {
         BkPlugin plugin = BkTeleport.getInstance();
         PagedOptions options = (PagedOptions) homesList.getCustomOptions();
-        ItemBuilder enableEdit = new ItemBuilder(plugin.getHandler().getItemManager().getWritableBook())
+        ItemBuilder enableEdit = new ItemBuilder(XMaterial.WRITABLE_BOOK)
                 .setName(plugin.getLangFile().get(sender, "homes-menu.edit-menu.button.enable.name"))
                 .setLore(plugin.getLangFile().getStringList("homes-menu.edit-menu.button.enable.lore"))
                 .hideTags();
-        ItemBuilder disableEdit = new ItemBuilder(plugin.getHandler().getItemManager().getWritableBook())
+        ItemBuilder disableEdit = new ItemBuilder(XMaterial.WRITABLE_BOOK)
                 .setName(plugin.getLangFile().get(sender, "homes-menu.edit-menu.button.disable.name"))
                 .setLore(plugin.getLangFile().getStringList("homes-menu.edit-menu.button.disable.lore"))
                 .hideTags();

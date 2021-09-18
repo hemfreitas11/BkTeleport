@@ -15,8 +15,11 @@ public class CommandHandler implements Listener {
         String commandLabel = event.getMessage().toLowerCase().split(" ")[0];
         Player sender = event.getPlayer();
         BkPlugin plugin = BkTeleport.getInstance();
-
-        if (BkTeleport.getInstance().getCommands().get("warp").contains(commandLabel)) {
+        if (BkTeleport.getInstance().getCommands().get("spawn").contains(commandLabel)) {
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.spawn.command"), event);
+        } else if (BkTeleport.getInstance().getCommands().get("setspawn").contains(commandLabel)) {
+            runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.setspawn.command"), event);
+        } else if (BkTeleport.getInstance().getCommands().get("warp").contains(commandLabel)) {
             runCommand(sender, commandLabel, "bkteleport:" + plugin.getLangFile().get(sender, "commands.warp.command"), event);
         } else if (BkTeleport.getInstance().getCommands().get("warps").contains(commandLabel)) {
             String editSub = plugin.getLangFile().get(sender, "commands.warp.subcommands.edit.command");

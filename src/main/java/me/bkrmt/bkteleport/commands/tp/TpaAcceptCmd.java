@@ -28,10 +28,9 @@ public class TpaAcceptCmd extends Executor {
                 for (Player inviter : getPlugin().getHandler().getMethodManager().getOnlinePlayers()) {
                     ClickableRequest tpHereRequest = ClickableRequest.getInteraction(TpHereCmd.TPHERE_IDENTIFIER, inviter.getUniqueId());
                     ClickableRequest tpaRequest = ClickableRequest.getInteraction(TpaCmd.TPA_IDENTIFIER, inviter.getUniqueId());
-
                     if ((tpHereRequest != null && tpHereRequest.getTarget().getUniqueId().equals(requestTarget.getUniqueId())) ||
                             (tpaRequest != null && tpaRequest.getTarget().getUniqueId().equals(requestTarget.getUniqueId()))) {
-                        args = new String[]{inviter.getName()};
+                        args = new String[]{tpHereRequest == null ? tpaRequest.getSender().getName() : tpHereRequest.getSender().getName()};
                         break;
                     }
                 }

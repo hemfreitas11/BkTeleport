@@ -4,6 +4,7 @@ import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.request.ClickableRequest;
+import me.bkrmt.bkcore.xlibs.XSound;
 import me.bkrmt.bkteleport.api.events.PlayerBkTeleportReplyEvent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -61,7 +62,7 @@ public class TpaDenyCmd extends Executor {
                             ClickableRequest.removeInteraction(TpHereCmd.TPHERE_IDENTIFIER, requestTarget.getUniqueId());
                         }
 
-                        requestSender.playSound(requestSender.getLocation(), getPlugin().getHandler().getSoundManager().getPling(), 15, 0.5f);
+                        XSound.BLOCK_NOTE_BLOCK_PLING.play(requestSender, 15, 0.5f);
                         requestSender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.invite-denied").replace("{player}", requestTarget.getName()));
                         requestTarget.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "info.invite-denied").replace("{player}", requestSender.getName()));
                     } else {

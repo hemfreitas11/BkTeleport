@@ -14,10 +14,9 @@
 #                              Made by: Bkr__
 #
 
-# Aqui você pode editar os comandos do plugin, e suas descrições no comando de ajuda
+# Aqui você pode editar os comandos do plugin, e suas descricoes no comando de ajuda
 # *-------------------*=/[Comandos]\=*------------------*
 commands:
-
   # Aqui você pode mudar a mensagem de ajuda do plugin
   help-format:
     header: '&7*----------------*=/[&2&lBkTeleporte&7]\=*----------------*'
@@ -27,23 +26,33 @@ commands:
   # Mensagem para quando o jogador usar o comando incorretamente
   usage-format: '&cUso: {usage}'
 
-  #Comando BkTeleporte
-  bkteleport:
-    command: 'bkteleporte'
-    description: 'Mostra a ajuda do plugin.'
-    usage: '/bkteleporte'
-
-  #Comando Atualizar
-  tpreload:
-    command: 'tpatualizar'
-    description: 'Atualiza as configuracoes e mensagens do plugin.'
-    usage: '/tpatualizar'
+  #Comando BkTeleport
+  # Esse comando não pode ser alterado, ele está aqui apenas para o comando de ajuda
+  bkcommand:
+    command: 'bkteleport'
+    description: 'Ajuda do plugin.'
+    usage: '/bkteleport [config | mensagens | reload]'
+    subcommands:
+      config:
+        command: 'config'
+        usage: '/bkteleport econfig'
+      reload:
+        command: 'reload'
+        usage: '/bkteleport reload'
+      messages:
+        command: 'mensagens'
+        usage: '/bkteleport mensagens'
 
   #Back Command
   back:
     command: 'voltar'
     description: 'Volta para a seu local anterior.'
     usage: '/voltar'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'back'
+      description: 'Nao mude esse comando.'
+      usage: '/back'
 
   #Spawn Command
   spawn:
@@ -69,23 +78,38 @@ commands:
     command: 'tpaqui'
     description: 'Pede que outro jogador teleporte ate voce.'
     usage: '/tpaqui <jogador>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'tpahere'
+      description: 'Nao mude esse comando.'
+      usage: '/tpahere <jogador>'
 
   #Comando TpAceitar
   tpaccept:
     command: 'tpaceitar'
     description: 'Aceita o pedido de teleporte recebido.'
     usage: '/tpaceitar <jogador>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'tpaccept'
+      description: 'Nao mude esse comando.'
+      usage: '/tpaccept <player>'
 
   #Comando TpNegar
   tpdeny:
     command: 'tpnegar'
     description: 'Recusa o pedido de teleporte recebido.'
     usage: '/tpnegar <jogador>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'tpdeny'
+      description: 'Nao mude esse comando.'
+      usage: '/tpdeny <player>'
 
   #Comando Casa
   home:
     command: 'casa'
-    description: 'Te teleporta para a sua casa.'
+    description: 'Teleporta ou edita a sua casa.'
     usage: '/casa <casa>'
     # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
     comando-ingles-nao-mudar:
@@ -104,18 +128,28 @@ commands:
     command: 'setcasa'
     description: 'Define o local da sua casa.'
     usage: '/setcasa <casa>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'sethome'
+      description: 'Nao mude esse comando.'
+      usage: '/sethome <home>'
 
   #Comando DelCasa
   delhome:
     command: 'delcasa'
     description: 'Deleta uma de suas casas.'
     usage: '/delcasa <casa>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'delhome'
+      description: 'Nao mude esse comando.'
+      usage: '/delhome <home>'
 
   #Comando Warp
   warp:
     command: 'warp'
-    description: 'Teleporta para uma warp.'
-    usage: '/warp <nome>'
+    description: 'Teleporta ou edita uma warp.'
+    usage: '/warp <nome | editar>'
     subcommands:
       edit:
         command: 'editar'
@@ -410,6 +444,17 @@ info:
   deleted:
     warp: '&aWarp deletada.'
     home: '&aCasa deletada.'
+  number-input:
+    go-back:
+      - '&7Clique aqui para confirmar e voltar.'
+    increase:
+      name: '&7&lAumentar {amount}'
+      description:
+        - '&7Clique para aumentar {amount}'
+    decrease:
+      name: '&7&lDiminuir {amount}'
+      description:
+        - '&7Clique para diminuir {amount}'
   name-set: '&aNovo nome de exibição definido!'
   visibility:
     set-public: '&eSua casa agora é publica!'

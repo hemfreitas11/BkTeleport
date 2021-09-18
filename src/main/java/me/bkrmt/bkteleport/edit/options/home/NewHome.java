@@ -7,13 +7,13 @@ import me.bkrmt.bkcore.bkgui.page.Page;
 import me.bkrmt.bkcore.bkgui.page.PageUtils;
 import me.bkrmt.bkcore.input.InputRunnable;
 import me.bkrmt.bkcore.input.PlayerInput;
+import me.bkrmt.bkcore.xlibs.XMaterial;
 import me.bkrmt.bkteleport.BkTeleport;
 import me.bkrmt.bkteleport.HomeType;
 import me.bkrmt.bkteleport.PluginUtils;
 import me.bkrmt.bkteleport.edit.EditOption;
 import me.bkrmt.bkteleport.teleportable.Home;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -56,7 +56,7 @@ public class NewHome extends EditOption {
 
     @Override
     public ItemStack getDisplayItem(PagedList list, Page currentPage) {
-        return new ItemStack(Material.NETHER_STAR);
+        return XMaterial.NETHER_STAR.parseItem();
     }
 
     @Override

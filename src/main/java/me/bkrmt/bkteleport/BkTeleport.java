@@ -1,13 +1,15 @@
 package me.bkrmt.bkteleport;
 
 import me.bkrmt.bkcore.BkPlugin;
+import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.bkgui.BkGUI;
+import me.bkrmt.bkcore.command.CommandMapper;
 import me.bkrmt.bkcore.command.CommandModule;
 import me.bkrmt.bkcore.command.Executor;
-import me.bkrmt.bkcore.command.HelpCmd;
-import me.bkrmt.bkcore.command.ReloadCmd;
+import me.bkrmt.bkcore.command.MainCommand;
 import me.bkrmt.bkcore.config.ConfigType;
 import me.bkrmt.bkcore.config.Configuration;
+import me.bkrmt.bkcore.guiconfig.GUIConfig;
 import me.bkrmt.bkcore.textanimator.AnimatorManager;
 import me.bkrmt.bkteleport.commands.BackCmd;
 import me.bkrmt.bkteleport.commands.CommandHandler;
@@ -29,6 +31,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -90,8 +93,7 @@ public final class BkTeleport extends BkPlugin {
         BkGUI.INSTANCE.register(this);
         animatorManager = new AnimatorManager(this);
         getCommandMapper()
-                .addCommand(new CommandModule(new HelpCmd(plugin, "bkteleport", ""), (a, b, c, d) -> Collections.singletonList("")))
-                .addCommand(new CommandModule(new ReloadCmd(plugin, "tpreload", "bkteleport.reload"), (a, b, c, d) -> Collections.singletonList("")))
+                .addCommand(new CommandModule(new MainCommand(plugin, "bkteleport.admin", GUIConfig::openMenu), null))
                 .addCommand(new CommandModule(new SpawnCmd(plugin, "spawn", "bkteleport.spawn"), null))
                 .addCommand(new CommandModule(new SetSpawnCmd(plugin, "setspawn", "bkteleport.setspawn"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new BackCmd(plugin, "back", "bkteleport.back"), (a, b, c, d) -> Collections.singletonList("")))
@@ -107,36 +109,34 @@ public final class BkTeleport extends BkPlugin {
                 .addCommand(new CommandModule(new WarpCmd(plugin, "warps", "bkteleport.warps"), (sender, b, c, args) -> warpsTabCompleter("warps", args, sender)))
                 .addCommand(new CommandModule(new SetWarpCmd(plugin, "setwarp", "bkteleport.setwarp"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new DelWarpCmd(plugin, "delwarp", "bkteleport.delwarp"), (sender, b, c, args) -> warpsTabCompleter("warp", args, sender)));
-        if (getLangFile().getLanguage().equalsIgnoreCase("pt_BR"))
-            getCommandMapper().addCommand(
-                    new CommandModule(
-                            new Executor(this, "home.comando-ingles-nao-mudar", "bkteleport.home") {
-                                @Override
-                                public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-                                    return true;
-                                }
-                            }, (sender, b, c, args) -> homesTabCompleter(args, sender)
-                    )
-            );
+        if (getLangFile().getLanguage().equalsIgnoreCase("pt_BR")) {
+            addExtraCommand("home", (sender, b, c, args) -> homesTabCompleter(args, sender));
+            addExtraCommand("back", (a, b, c, d) -> Collections.singletonList(""));
+            addExtraCommand("tpahere", (sender, b, c, args) -> tpaCompleter(args, sender));
+            addExtraCommand("tpaccept", (sender, b, c, args) -> tpaCompleter(args, sender));
+            addExtraCommand("tpdeny", (sender, b, c, args) -> tpaCompleter(args, sender));
+            addExtraCommand("sethome", (a, b, c, d) -> Collections.singletonList(""));
+            addExtraCommand("delhome", (sender, b, c, args) -> homesTabCompleter(args, sender));
+        }
 
         getCommandMapper().registerAll();
 
         commands = new Hashtable<>();
-        commands.put("spawn", getConfigManager().getConfig().getStringList("commands.spawn"));
-        commands.put("setspawn", getConfigManager().getConfig().getStringList("commands.setspawn"));
-        commands.put("back", getConfigManager().getConfig().getStringList("commands.back"));
-        commands.put("tpa", getConfigManager().getConfig().getStringList("commands.tpa"));
-        commands.put("tpahere", getConfigManager().getConfig().getStringList("commands.tpahere"));
-        commands.put("tpaccept", getConfigManager().getConfig().getStringList("commands.tpaccept"));
-        commands.put("tpdeny", getConfigManager().getConfig().getStringList("commands.tpdeny"));
-        commands.put("home", getConfigManager().getConfig().getStringList("commands.home"));
-        commands.put("homes", getConfigManager().getConfig().getStringList("commands.homes"));
-        commands.put("sethome", getConfigManager().getConfig().getStringList("commands.sethome"));
-        commands.put("delhome", getConfigManager().getConfig().getStringList("commands.delhome"));
-        commands.put("warp", getConfigManager().getConfig().getStringList("commands.warp"));
-        commands.put("warps", getConfigManager().getConfig().getStringList("commands.warps"));
-        commands.put("setwarp", getConfigManager().getConfig().getStringList("commands.setwarp"));
-        commands.put("delwarp", getConfigManager().getConfig().getStringList("commands.delwarp"));
+        addCommand("spawn");
+        addCommand("setspawn");
+        addCommand("back");
+        addCommand("tpa");
+        addCommand("tpahere");
+        addCommand("tpaccept");
+        addCommand("tpdeny");
+        addCommand("home");
+        addCommand("homes");
+        addCommand("sethome");
+        addCommand("delhome");
+        addCommand("warp");
+        addCommand("warps");
+        addCommand("setwarp");
+        addCommand("delwarp");
 
         getServer().getPluginManager().registerEvents(new CommandHandler(), this);
 
@@ -196,6 +196,29 @@ public final class BkTeleport extends BkPlugin {
         if (getConfigManager().getConfig().getBoolean("essentials.save-warps-to-essentials")) copyToEss();
 
         sendConsoleMessage(me.bkrmt.bkteleport.InternalMessages.PLUGIN_STARTED.getMessage(this));
+    }
+
+    private CommandMapper addExtraCommand(String key, TabCompleter completer) {
+        return getCommandMapper()
+                .addCommand(
+                        new CommandModule(
+                                new Executor(this, key + ".comando-ingles-nao-mudar", "bkteleport." + key) {
+                                    @Override
+                                    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+                                        ((Player) sender).performCommand("bkteleport:" + getLangFile().get("commands." + key + ".command") + " " + Utils.joinStringArray(args));
+                                        return true;
+                                    }
+                                }, completer
+                        )
+                );
+    }
+
+    private void addCommand(String key) {
+        List<String> tempCommands = new ArrayList<>();
+        for (String command : getConfigManager().getConfig().getStringList("commands.spawn")) {
+            tempCommands.add(command.toLowerCase());
+        }
+        commands.put(key, tempCommands);
     }
 
     @Override
@@ -275,10 +298,10 @@ public final class BkTeleport extends BkPlugin {
             String partialCommand = args[0];
 
             List<String> warps = new ArrayList<>();
-            if (getCommands().get("warp").contains("/" + command)) warps.addAll(Arrays.asList(PluginUtils.getWarps()));
+            if (command.equalsIgnoreCase("warp")) warps.addAll(Arrays.asList(PluginUtils.getWarps()));
             warps.add(plugin.getLangFile().get((OfflinePlayer) sender, "commands.warp.subcommands.edit.command"));
             StringUtil.copyPartialMatches(partialCommand, warps, completions);
-        } else if (getCommands().get("warp").contains("/" + command) && args.length == 2 && (sender.hasPermission("bkteleport.warp.others") || sender.hasPermission("bkteleport.admin"))) {
+        } else if (command.equalsIgnoreCase("warp") && args.length == 2 && (sender.hasPermission("bkteleport.warp.others") || sender.hasPermission("bkteleport.admin"))) {
             String partialPlayer = args[1];
             List<String> playerList = new ArrayList<>();
             for (Player player : plugin.getHandler().getMethodManager().getOnlinePlayers()) {

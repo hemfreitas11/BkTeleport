@@ -6,12 +6,12 @@
 
     <groupId>me.bkrmt</groupId>
     <artifactId>bkteleport</artifactId>
-    <version>3</version>
+    <version>3.1</version>
     <packaging>jar</packaging>
 
     <name>BkTeleport</name>
 
-    <description>Replacement for essentials teleport</description>
+    <description>Replacement for essentials teleport system and more</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -212,6 +212,18 @@
             <artifactId>v1_16_R1</artifactId>
             <version>v1_16_R1</version>
             <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>guiconfig</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.bkrmt.bkcore</groupId>
+            <artifactId>guiconfig</artifactId>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

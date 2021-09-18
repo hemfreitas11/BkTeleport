@@ -43,10 +43,16 @@ public class WarpCmd extends Executor {
                 sendWarps((Player) sender);
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase(getPlugin().getLangFile().get((OfflinePlayer) sender, "commands.warp.subcommands.edit.command"))) {
-                    if (sender.hasPermission("bkteleport.admin")) PluginUtils.openWarpsGui((Player) sender, null, true);
-                    else sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
-                }
-                else sendToWarp(sender, args, true);
+                    if (sender.hasPermission("bkteleport.admin")) {
+                        File[] warps = getPlugin().getFile("warps", "").listFiles();
+                        if (warps != null && warps.length > 0) {
+                            PluginUtils.openWarpsGui((Player) sender, null, true);
+                        } else {
+                            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.warps-empty"));
+                        }
+                    } else
+                        sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
+                } else sendToWarp(sender, args, true);
             } else if (args.length == 2) {
                 if (sender.hasPermission("bkteleport.warp.others") || sender.hasPermission("bkteleport.admin")) {
                     sendOtherToWarp(sender, args);
@@ -59,7 +65,7 @@ public class WarpCmd extends Executor {
         }
         return true;
     }
-    
+
     private void sendOtherToWarp(CommandSender sender, String[] args) {
         Player target = Utils.getPlayer(args[1]);
         if (target != null) {
