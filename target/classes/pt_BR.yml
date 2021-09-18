@@ -1,0 +1,574 @@
+#
+#  ▄▄▄▄   ██ ▄█▄▄▄█████▓█████ ██▓   ▓█████ ██▓███  ▒█████  ██▀███ ▄▄▄█████▓
+# ▓█████▄ ██▄█▒▓  ██▒ ▓▓█   ▀▓██▒   ▓█   ▀▓██░  ██▒██▒  ██▓██ ▒ ██▓  ██▒ ▓▒
+# ▒██▒ ▄█▓███▄░▒ ▓██░ ▒▒███  ▒██░   ▒███  ▓██░ ██▓▒██░  ██▓██ ░▄█ ▒ ▓██░ ▒░
+# ▒██░█▀ ▓██ █▄░ ▓██▓ ░▒▓█  ▄▒██░   ▒▓█  ▄▒██▄█▓▒ ▒██   ██▒██▀▀█▄ ░ ▓██▓ ░
+# ░▓█  ▀█▒██▒ █▄ ▒██▒ ░░▒████░██████░▒████▒██▒ ░  ░ ████▓▒░██▓ ▒██▒ ▒██▒ ░
+# ░▒▓███▀▒ ▒▒ ▓▒ ▒ ░░  ░░ ▒░ ░ ▒░▓  ░░ ▒░ ▒▓▒░ ░  ░ ▒░▒░▒░░ ▒▓ ░▒▓░ ▒ ░░
+# ▒░▒   ░░ ░▒ ▒░   ░    ░ ░  ░ ░ ▒  ░░ ░  ░▒ ░      ░ ▒ ▒░  ░▒ ░ ▒░   ░
+#  ░    ░░ ░░ ░  ░        ░    ░ ░     ░  ░░      ░ ░ ░ ▒   ░░   ░  ░
+#  ░     ░  ░             ░  ░   ░  ░  ░  ░           ░ ░    ░
+#       ░
+#
+#                 ® BkPlugins | discord.gg/2MHgyjCuPc
+#                              Made by: Bkr__
+#
+
+# Aqui você pode editar os comandos do plugin, e suas descricoes no comando de ajuda
+# *-------------------*=/[Comandos]\=*------------------*
+commands:
+  # Aqui você pode mudar a mensagem de ajuda do plugin
+  help-format:
+    header: '&7*----------------*=/[&2&lBkTeleporte&7]\=*----------------*'
+    help-section: '&7- &a{command} &f- &7{description}'
+    footer: '&7*-----------------*=[&aFeito por: Bkr__&7]=*---------------*'
+
+  # Mensagem para quando o jogador usar o comando incorretamente
+  usage-format: '&cUso: {usage}'
+
+  #Comando BkTeleport
+  # Esse comando não pode ser alterado, ele está aqui apenas para o comando de ajuda
+  bkcommand:
+    command: 'bkteleport'
+    description: 'Ajuda do plugin.'
+    usage: '/bkteleport [config | mensagens | reload]'
+    subcommands:
+      config:
+        command: 'config'
+        usage: '/bkteleport econfig'
+      reload:
+        command: 'reload'
+        usage: '/bkteleport reload'
+      messages:
+        command: 'mensagens'
+        usage: '/bkteleport mensagens'
+
+  #Back Command
+  back:
+    command: 'voltar'
+    description: 'Volta para a seu local anterior.'
+    usage: '/voltar'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'back'
+      description: 'Nao mude esse comando.'
+      usage: '/back'
+
+  #Spawn Command
+  spawn:
+    command: 'spawn'
+    description: 'Volta para o spawn do servidor.'
+    usage: '/spawn [player]'
+
+  #SetSpawn Command
+  setspawn:
+    command: 'setspawn'
+    description: 'Define o local do spawn do servidor.'
+    usage: '/setspawn'
+
+
+  #Comando Tpa
+  tpa:
+    command: 'tpa'
+    description: 'Manda um convite de teleporte a outro jogador.'
+    usage: '/tpa <jogador>'
+
+  #Comando TpAqui
+  tpahere:
+    command: 'tpaqui'
+    description: 'Pede que outro jogador teleporte ate voce.'
+    usage: '/tpaqui <jogador>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'tpahere'
+      description: 'Nao mude esse comando.'
+      usage: '/tpahere <jogador>'
+
+  #Comando TpAceitar
+  tpaccept:
+    command: 'tpaceitar'
+    description: 'Aceita o pedido de teleporte recebido.'
+    usage: '/tpaceitar <jogador>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'tpaccept'
+      description: 'Nao mude esse comando.'
+      usage: '/tpaccept <player>'
+
+  #Comando TpNegar
+  tpdeny:
+    command: 'tpnegar'
+    description: 'Recusa o pedido de teleporte recebido.'
+    usage: '/tpnegar <jogador>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'tpdeny'
+      description: 'Nao mude esse comando.'
+      usage: '/tpdeny <player>'
+
+  #Comando Casa
+  home:
+    command: 'casa'
+    description: 'Teleporta ou edita a sua casa.'
+    usage: '/casa <casa>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'home'
+      description: 'Nao mude esse comando.'
+      usage: '/home <home>'
+
+  #Homes Command
+  homes:
+    command: 'homes'
+    description: 'Shows a list of your homes.'
+    usage: '/homes'
+
+  #Comando SetCasa
+  sethome:
+    command: 'setcasa'
+    description: 'Define o local da sua casa.'
+    usage: '/setcasa <casa>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'sethome'
+      description: 'Nao mude esse comando.'
+      usage: '/sethome <home>'
+
+  #Comando DelCasa
+  delhome:
+    command: 'delcasa'
+    description: 'Deleta uma de suas casas.'
+    usage: '/delcasa <casa>'
+    # Nao mude a opcao abaixo, sem ela o plugin não coloca o completador de tabs no comando /home
+    comando-ingles-nao-mudar:
+      command: 'delhome'
+      description: 'Nao mude esse comando.'
+      usage: '/delhome <home>'
+
+  #Comando Warp
+  warp:
+    command: 'warp'
+    description: 'Teleporta ou edita uma warp.'
+    usage: '/warp <nome | editar>'
+    subcommands:
+      edit:
+        command: 'editar'
+        description: 'Edita as warps existentes.'
+
+  #Comando Warps
+  warps:
+    command: 'warps'
+    description: 'Shows a list of warps.'
+    usage: '/warps'
+
+  #Comando SetWarp
+  setwarp:
+    command: 'setwarp'
+    description: 'Define uma warp.'
+    usage: '/setwarp <nome>'
+
+  #Comando DelWarp
+  delwarp:
+    command: 'delwarp'
+    description: 'Deleta uma warp.'
+    usage: '/delwarp <nome>'
+# *-----------------------*=[|]=*-----------------------*
+
+
+# *---------------*=/[Pedidos Teleporte]\=*-------------*
+teleport-requests:
+  tpa:
+    accept-button: '&2&l[ACEITAR]'
+    deny-button: '&c&l[NEGAR]'
+    accept-hover: '&2Clique para aceitar.'
+    deny-hover: '&cClique para negar.'
+    message:
+      - '&a*---------------*=/[|]\=*----------------*'
+      - ' '
+      - '&aO jogador &a&l{player} &adeseja se teleportar ate voce.'
+      - ' '
+      - '&a               {accept-button} {deny-button}'
+      - ' '
+      - '&aEsse pedido de teleporte ira expirar em &2{seconds} &asegundos.'
+      - ' '
+      - '&a*---------------------------------------*'
+      - ' '
+  tphere:
+    accept-button: '&2&l[ACEITAR]'
+    deny-button: '&c&l[NEGAR]'
+    accept-hover: '&2Clique para aceitar.'
+    deny-hover: '&cClique para negar.'
+    message:
+      - '&e*---------------*=/[|]\=*----------------*'
+      - ' '
+      - '&eO jogador &6&l{player} &edeseja que voce va ate ele.'
+      - ' '
+      - '&e               {accept-button} {deny-button}'
+      - ' '
+      - '&eEsse pedido de teleporte ira expirar em &6{seconds} &esegundos.'
+      - ' '
+      - '&e*---------------------------------------*'
+      - ' '
+# *-----------------------*=[|]=*-----------------------*
+
+
+# *------------------*=/[Menus]\=*-----------------*
+homes-menu:
+  title: '&8&lCasas de {player} {current-page}/{total-pages}'
+  default-home-name: '&e/casa {shine gold text[{home-name}]}'
+  visibility:
+    public: '&ePUBLICA'
+    private: '&cPRIVADA'
+  new-home:
+    name: '{shine green}Nova Casa'
+    description:
+      - ' '
+      - '&7Clique para criar uma nova casa aqui.'
+      - ' '
+      - '&7Casas criadas: &a{homes}&7/&a{max-homes}&7.'
+    confirm:
+      title: '&8&lVocê quer comprar uma nova casa?'
+      info:
+        name: '{shine green bold}Criar Nova Casa'
+        description:
+          - ' '
+          - '&7Preço: {price}'
+          - '&7Clique para confirmar a compra da nova casa.'
+      accept: '{shine green}Confirmar'
+      decline: '{shine red}Negar'
+  edit-menu:
+    title: '&8&lOpções de {home-name}'
+    button:
+      enable:
+        name: '{shine green bold} Habilitar Modo Edição'
+        lore:
+          - ' '
+          - '&7Clique em uma casa para teleportar até ela.'
+          - ' '
+          - '&7&oClique aqui para habilitar o modo edição.'
+      disable:
+        name: '{shine red bold} Desabilitar Modo Edição'
+        lore:
+          - ' '
+          - '&7Você agora está no modo edição. Clique em uma casa para edita-la.'
+          - ' '
+          - '&7&oClique aqui para desabilitar o modo edição.'
+    set-name:
+      name: '&aDefinir Nome'
+      lore:
+        - ' '
+        - '&7Define o nome de exibição da casa.'
+        - ' '
+        - '&7Isso muda apenas o nome de exibição no menu,'
+        - '&7não o nome da casa em si.'
+    set-lore:
+      name: '&aDefinir Descrição'
+      lore:
+        - ' '
+        - '&7Define uma nova descrição para a casa.'
+        - ' '
+        - '&7Digite apenas "#" para remover.'
+    set-location:
+      name: '&aDefinir Local'
+      lore:
+        - ' '
+        - '&7Define um novo local para a casa'
+        - '&7e preserva todas as opções atuais.'
+        - ' '
+        - '&7Local Atual:'
+        - '&7Mundo: &7&l{world}'
+        - '&7X: &7&l{x}'
+        - '&7Y: &7&l{y}'
+        - '&7Z: &7&l{z}'
+    set-item:
+      name: '&aDefinir Item'
+      lore:
+        - ' '
+        - '&7Define o item de exibição da casa.'
+        - ' '
+        - '&7Item atual:'
+        - '&7&l{item}'
+    delete:
+      name: '&4Deletar Casa'
+      lore:
+        - ' '
+        - '&7Deleta essa casa.'
+        - '&7Você precisará confirmar.'
+    set-public:
+      name: '&aDefinir Visibilidade'
+      lore:
+        - ' '
+        - '&7Define se qualquer um pode teleportar'
+        - '&7e ver essa casa.'
+        - ' '
+        - '&7Visibilidade atual:'
+        - '{visibility}'
+        
+warps-menu:
+  title: '&8&lWarps do Servidor {current-page}/{total-pages}'
+  default-warp-name: '&e/warp &6{shine gold text[{warp-name}]}'
+  default-warp-lore:
+  - ' '
+  - '&6Me mude com o comando /warp editar!'
+  edit-menu:
+    title: '&8&lOpções de {warp-name}'
+    set-name:
+      name: '&aDefinir Nome'
+      lore:
+        - ' '
+        - '&7Define o nome de exibição da warp.'
+        - ' '
+        - '&7Isso muda apenas o nome de exibição no menu,'
+        - '&7não o nome da warp em si.'
+    set-lore:
+      name: '&aDefinir Descrição'
+      lore:
+        - ' '
+        - '&7Define uma nova descrição para a warp.'
+        - ' '
+        - '&7Digite apenas "#" para remover.'
+    set-location:
+      name: '&aDefinir Local'
+      lore:
+        - ' '
+        - '&7Define um novo local para a warp'
+        - '&7e preserva todas as opções atuais.'
+        - ' '
+        - '&7Local Atual:'
+        - '&7Mundo: &7&l{world}'
+        - '&7X: &7&l{x}'
+        - '&7Y: &7&l{y}'
+        - '&7Z: &7&l{z}'
+    set-item:
+      name: '&aDefinir Item'
+      lore:
+        - ' '
+        - '&7Define o item de exibição da warp.'
+        - ' '
+        - '&7Item atual:'
+        - '&7&l{item}'
+    delete:
+      name: '&4Deletar Warp'
+      lore:
+        - ' '
+        - '&7Deleta essa warp.'
+        - '&7Você precisará confirmar.'
+    set-slot:
+      no-slot: '&7&lSem slot definido'
+      name: '&aDefinir Slot'
+      lore:
+        - ' '
+        - '&7OPICIONAL'
+        - ' '
+        - '&7Essa opção só tem efeito quando a lista não está em modo edição.'
+        - ' '
+        - '&7Define o slot em que essa warp será mostrada no menu de warps.'
+        - ' '
+        - '&7Warps sem slots definidos serão exibidas em ordem nas páginas.'
+        - ' '
+        - '&7Altamente recomendado definir slots e páginas'
+        - '&7para toras as suas warps.'
+        - ' '
+        - '&7Mude para -1 para remover.'
+        - ' '
+        - '&7Slot atual: &7&l{slot}'
+    set-page:
+      no-page: '&7&lNo page set'
+      name: '&aSet Page'
+      lore:
+        - ' '
+        - '&7OPICIONAL'
+        - ' '
+        - '&7Essa opção só tem efeito quando a lista não está em modo edição.'
+        - ' '
+        - '&7Define a página em que essa warp será mostrada no menu de warps.'
+        - ' '
+        - '&7Warps sem páginas definidas serão exibidas em ordem no menu.'
+        - ' '
+        - '&7Altamente recomendado definir slots e páginas'
+        - '&7para toras as suas warps.'
+        - ' '
+        - '&7Mude para -1 para remover.'
+        - ' '
+        - '&7Página atual: &7&l{page}'
+    set-command:
+      name: '&aDefinir Comando'
+      lore:
+        - ' '
+        - '&7OPICIONAL'
+        - ' '
+        - '&7Define um comando para ser executado pelo console'
+        - '&7quando um jogador clica nessa warp.'
+        - ' '
+        - '&7Digite o comando sem "/".'
+        - ' '
+        - '&7Use "{player}" para incluir o nome do jogador'
+        - '&7Placeholders do PlaceholderAPI são suportados'
+        - '&7Ex: gamemode creative {player}.'
+        - ' '
+        - '&7Comando atual: &7&l/{command}'
+        
+gui-buttons:
+  next-page:
+    name: '{shine green bold}Próxima Página'
+    description: '&7Ir para a página &a{page-number}'
+  previous-page:
+    name: '{shine red bold}Previous Page'
+    description: '&7Voltar para a página &c{page-number}'
+  previous-menu:
+    name: '{shine red bold}Menu Anterior'
+    description:
+      - '&7Retorna ao menu anterior'
+# *-----------------------*=[|]=*-----------------------*
+
+
+# Aqui você pode mudar todas as mensagens do plugin
+# Para remover espaços vazios basta mudar a mensagem de ' ' para ''
+# *---------------*=/[Mensagens Gerais]\=*--------------*
+info:
+  new-home: '&aDigite o nome da casa'
+  spawn-set: '&aSpawn definido!'
+  last-location:
+    title: '&aVocê retornou para'
+    subtitle: '&aseu último local'
+  edit-mode:
+    enabled: '&aModo edição habilitado!'
+    disabled: '&cModo edição desabilitado!'
+  confirm:
+    title: '&8&lVoçê tem certeza?'
+    accept: '&a&lConfirmar'
+    decline: '&c&lNegar'
+    location: '&4&lTem certeza que deseja mudar o local?'
+    delete: '&4&lTem certeza que deseja deletar?'
+    cancelled: '&cCancelado.'
+  deleted:
+    warp: '&aWarp deletada.'
+    home: '&aCasa deletada.'
+  number-input:
+    go-back:
+      - '&7Clique aqui para confirmar e voltar.'
+    increase:
+      name: '&7&lAumentar {amount}'
+      description:
+        - '&7Clique para aumentar {amount}'
+    decrease:
+      name: '&7&lDiminuir {amount}'
+      description:
+        - '&7Clique para diminuir {amount}'
+  name-set: '&aNovo nome de exibição definido!'
+  visibility:
+    set-public: '&eSua casa agora é publica!'
+    set-private: '&cSua casa agora é privada!'
+  command-set: '&aNovo comando ao clicar definido!'
+  page-set: '&aNova página definida!'
+  slot-set: '&aNovo slot definido!'
+  lore-set: '&aNova descrição definida!'
+  location-set: '&aNovo local definido!'
+  item-set: '&aNovo item de exibição definido!'
+  input-canceled: '&eEntrada cancelada.'
+  configs-reloaded: '&aTodas as configuracoes e mensagens foram recarregadas!'
+  spying: '&5&oEspiando: {player}'
+  invulnerable-remaining: '&cInvulneravel por {seconds} segundos'
+  home-list-title: '&8&lCasas'
+  warp-list-title: '&8&lWarps'
+  home-description: '&6&l/casa {0}'
+  home-set: '&aCasa &2{home-name} &adefinida com sucesso.'
+  time-remaining: '&7Teleportando em &a{seconds}'
+  input:
+    number: '&a&lDigite um número'
+    new-name: '&a&lDigite o novo nome'
+    new-item: '&a&lDigite o novo item'
+    command:
+      title: '&a&lDigite o novo item'
+      subtitle: '&7Use ''&e{player}&7'' &7para o nome do jogador'
+    new-lore:
+      title: '&eDigite a nova descrição'
+      subtitle: '&7Você pode começar uma nova linha com ''&e#&7'''
+    cancel: '&7Digite ''&c{cancel-input}&7'' para cancelar.'
+    countdown: '&7&lCancelando em &c&l{seconds}'
+  invite-accepted:
+    self: '&aPedido de teleporte para &2{player} &aaceito.'
+    others: '&aPedido de teleporte de &2{player} &aaceito.'
+  return-name: '&c&lVoltar'
+  return-desc: '&4Volta para a pagina anterior.'
+  next-name: '&2&lProximo'
+  next-desc: '&aVai para a proxima pagina.'
+  sent-invite: '&aVoce mandou um pedido de teleporte para &2{player}.'
+  invite-denied: '&cPedido de teleporte de &4{player} &cfoi recusado.'
+  home-deleted: '&aCasa removida com sucesso.'
+  warp-deleted: '&aWarp removida com sucesso.'
+  home-list:
+    home-format: '&a&n{home}'
+    start: '&2Casas: '
+    separator: '&2, '
+    end: '&2.'
+    hover: '&aClique aqui para ir a essa casa.'
+  warp-list:
+    warp-format: '&a&n{warp}'
+    start: '&2Warps: '
+    separator: '&2, '
+    end: '&2.'
+    hover: '&aClique aqui para ir a essa warp.'
+  config-reloaded: '&aConfig e mensagens recarregadas com sucesso.'
+  cant-sethome: '&aVoce nao pode setar mais casas.'
+  warp-set:
+    title: '&aWarp &2{warp-name}'
+    subtitle: '&adefinida com sucesso.'
+  warped:
+    title: '&aVoce teleportou para'
+    subtitle: '&2{player}'
+    home:
+      title: '&aVocê teleportor para'
+      subtitle: '&2{home-name}'
+    warp:
+      title: '&aVocê teleportor para'
+      subtitle: '&2{warp-name}'
+# *-----------------------*=[|]=*-----------------------*
+
+
+# *--------------*=/[Mensagem de Erro]\=*---------------*
+error:
+  use-setspawn: '&cUse o comando /setspawn para definir o spawn.'
+  invalid-spawn: '&eO servidor não definiu um spawn ainda.'
+  invalid-last-location: '&cSeu último local não foi encontrado.'
+  reserved-name: '&cVocê não pode nomear uma warp "editar".'
+  invalid-name: '&cO nome precisa ter pelo menos uma letra ou número. Caractéres especiais serão removidos.'
+  input:
+    awaiting-input: '&cVocê não pode usar comandos agora. Digite ''{cancel-input}'' para cancelar.'
+    canceled: '&cVocê cancelou a entrada.'
+    timedout: '&cVocê não digitou nada.'
+    no-number: '&cVocê não digitou um número.'
+    invalid-item: '&cVocê digitou um material de item inválido.'
+  material-not-found: '&cO item {item} do arquivo {file} não foi encontrado. Usando padrão...'
+  option-error: '&cHouve um erro ao executar essa opção.'
+  option-permission: '&cVocê não tem permissão para usar essa opção.'
+  wrong-spy-format: '&cExemplo: /casa Bkr:casa'
+  home-limit: '&cVoce atingiu o seu limite de &4{max-homes} &ccasas.'
+  player-not-found: '&cO jogador &4{player} &cnao foi encontrado.'
+  no-player-specified: '&cVoce deve dizer o nome do jogador que voce quer aceitar/negar o pedido.'
+  not-online: '&cO jogador &4{player} &cesta online.'
+  no-permission: '&cVoce nao tem permissao para fazer isso.'
+  unknown-home-spy: '&cO jogador &4{player} &cnao possui uma casa com o nome &4{home-name}&c.'
+  unknown-warp: '&cA warp &4{warp-name} &cnao exise.'
+  unknown-home: '&cA casa &4{home-name} &cnao existe.'
+  no-homes: '&eVoce nao tem uma casa. Digite /setcasa <nome> para definir uma.'
+  homes-not-found: '&cCasas do jogador &4{player} &cnao foram encontradas.'
+  no-home-spy: '&cEsse jogador nao possui casas.'
+  warps-empty: '&eO servidor nao definiu warps ainda ou você não tem permissão para vê-las.'
+  other-already-waiting: '&cO jogador &4{player} &cja esta esperando um teleporte. Pedido cancelado.'
+  already-waiting: '&cVoce ja esta esperando um teleporte.'
+  no-pending-invite: '&cEsse pedido de teleporte nao existe mais.'
+  invite-denied: '&cO seu pedido de teleporte para &4{player} &cfoi recusado.'
+  cant-invite-self: '&cVoce nao pode mandar um convite de teleporte para voce mesmo.'
+  cant-invite-again: '&cVoce ja mandou um convite para esse jogador.'
+  invite-expired: '&cO pedido de teleporte de &4{player} &cexpirou.'
+  invite-expired-self: '&cO pedido de teleporte para &4{player} &cexpirou.'
+  cant-attack-now:
+    self: '&cVoce nao pode atacar por mais {seconds} segundos!'
+    others: '&cEsse jogador nao pode ser atacado por mais {seconds} segundos!'
+  warp-canceled-title: '&cTeleporte cancelado.'
+  warp-canceled-cause:
+    dealt-damage: '&cVoce atacou.'
+    took-damage: '&cVoce sofreu dano.'
+    moved: '&cVoce se moveu.'
+# *-----------------------*=[|]=*-----------------------*
