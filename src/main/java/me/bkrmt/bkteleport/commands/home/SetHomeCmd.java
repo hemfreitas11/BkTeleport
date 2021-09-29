@@ -62,13 +62,18 @@ public class SetHomeCmd extends Executor {
                             .replace(" ", "_")
                             .replace("]", "").toLowerCase();
                         if (!homeName.isEmpty()) {
-                            setHomeValues(player, homeName);
-                            getPlugin().sendTitle(
-                                    (Player) sender,
-                                    5, 40, 10,
-                                    getPlugin().getLangFile().get((OfflinePlayer) sender, "info.home-set").replace("{home-name}", homeName),
-                                    ""
-                            );
+                            String bedCommand = getPlugin().getLangFile().get("commands.home.subcommands.bed.command");
+                            if (!homeName.equalsIgnoreCase(bedCommand)) {
+                                setHomeValues(player, homeName);
+                                getPlugin().sendTitle(
+                                        (Player) sender,
+                                        5, 40, 10,
+                                        getPlugin().getLangFile().get((OfflinePlayer) sender, "info.home-set").replace("{home-name}", homeName),
+                                        ""
+                                );
+                            } else {
+                                sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.reserved-home"));
+                            }
                         } else {
                             sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.invalid-name"));
                         }

@@ -90,6 +90,10 @@ commands:
     command: 'home'
     description: 'Teleports to or edits homes.'
     usage: '/home <home-name>'
+    subcommands:
+      bed:
+        command: 'bed'
+        usabe: '/home bed'
 
   #Homes Command
   homes:
@@ -502,10 +506,12 @@ info:
 
 # *----------------*=/[Error Messages]\=*---------------*
 error:
+  invalid-bed: '&cYou don''t have a bed or its location is obstructed.'
   use-setspawn: '&cUse the command /setspawn to set the spawn.'
   invalid-spawn: '&eThe server didn''t set the spawn yet.'
   invalid-last-location: '&cThe last location was not found.'
   reserved-name: '&cYou can''t name a warp "edit".'
+  reserved-home: '&cYou can''t name a home "bed". This is reserved for your bed''s location.'
   invalid-name: '&cThe name needs to have atleast one letter or number. Special characters will be removed.'
   input:
     awaiting-input: '&cYou can''t use commands now. Type ''{cancel-input}'' to cancel.'

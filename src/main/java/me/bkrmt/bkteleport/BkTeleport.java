@@ -103,21 +103,21 @@ public final class BkTeleport extends BkPlugin {
                 .addCommand(new CommandModule(new TpaAcceptCmd(plugin, "tpaccept", "bkteleport.tpaccept"), (sender, b, c, args) -> tpaCompleter(args, sender)))
                 .addCommand(new CommandModule(new TpaDenyCmd(plugin, "tpdeny", "bkteleport.tpdeny"), (sender, b, c, args) -> tpaCompleter(args, sender)))
                 .addCommand(new CommandModule(new SetHomeCmd(plugin, "sethome", "bkteleport.sethome"), (a, b, c, d) -> Collections.singletonList("")))
-                .addCommand(new CommandModule(new DelHomeCmd(plugin, "delhome", "bkteleport.delhome"), (sender, b, c, args) -> homesTabCompleter(args, sender)))
-                .addCommand(new CommandModule(new HomeCmd(plugin, "home", "bkteleport.home"), (sender, b, c, args) -> homesTabCompleter(args, sender)))
+                .addCommand(new CommandModule(new DelHomeCmd(plugin, "delhome", "bkteleport.delhome"), (sender, b, c, args) -> homesTabCompleter("delhome", args, sender)))
+                .addCommand(new CommandModule(new HomeCmd(plugin, "home", "bkteleport.home"), (sender, b, c, args) -> homesTabCompleter("home", args, sender)))
                 .addCommand(new CommandModule(new HomeCmd(plugin, "homes", "bkteleport.home"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new WarpCmd(plugin, "warp", "bkteleport.warp"), (sender, b, c, args) -> warpsTabCompleter("warp", args, sender)))
                 .addCommand(new CommandModule(new WarpCmd(plugin, "warps", "bkteleport.warps"), (sender, b, c, args) -> warpsTabCompleter("warps", args, sender)))
                 .addCommand(new CommandModule(new SetWarpCmd(plugin, "setwarp", "bkteleport.setwarp"), (a, b, c, d) -> Collections.singletonList("")))
                 .addCommand(new CommandModule(new DelWarpCmd(plugin, "delwarp", "bkteleport.delwarp"), (sender, b, c, args) -> warpsTabCompleter("warp", args, sender)));
         if (getLangFile().getLanguage().equalsIgnoreCase("pt_BR")) {
-            addExtraCommand("home", (sender, b, c, args) -> homesTabCompleter(args, sender));
+            addExtraCommand("home", (sender, b, c, args) -> homesTabCompleter("home", args, sender));
             addExtraCommand("back", (a, b, c, d) -> Collections.singletonList(""));
             addExtraCommand("tpahere", (sender, b, c, args) -> tpaCompleter(args, sender));
             addExtraCommand("tpaccept", (sender, b, c, args) -> tpaCompleter(args, sender));
             addExtraCommand("tpdeny", (sender, b, c, args) -> tpaCompleter(args, sender));
             addExtraCommand("sethome", (a, b, c, d) -> Collections.singletonList(""));
-            addExtraCommand("delhome", (sender, b, c, args) -> homesTabCompleter(args, sender));
+            addExtraCommand("delhome", (sender, b, c, args) -> homesTabCompleter("delhome", args, sender));
         }
 
         getCommandMapper().registerAll();
@@ -262,8 +262,8 @@ public final class BkTeleport extends BkPlugin {
     private void copyFromEss(String essFolderName) {
         File essFolder = new File("plugins" + File.separator + "Essentials" + File.separator + essFolderName);
         if (essFolder.exists()) {
-            if (essFolder.listFiles().length > 0) {
-                File[] files = essFolder.listFiles();
+            File[] files = essFolder.listFiles();
+            if (files != null && files.length > 0) {
                 boolean warned = false;
                 for (File file : files) {
                     try {
@@ -328,12 +328,13 @@ public final class BkTeleport extends BkPlugin {
 
     }
 
-    private List<String> homesTabCompleter(String[] args, CommandSender sender) {
+    private List<String> homesTabCompleter(String command, String[] args, CommandSender sender) {
         List<String> completions = new ArrayList<>();
         if (sender.hasPermission("bkteleport.home") || sender.hasPermission("bkteleport.player")) {
             if (args.length == 1) {
                 String partialCommand = args[0];
-                List<String> homes = Arrays.asList(PluginUtils.getHomes(((Player) sender)));
+                List<String> homes = new ArrayList<>(Arrays.asList(PluginUtils.getHomes(((Player) sender))));
+                if (!command.equals("delhome")) homes.add(getLangFile().get("commands.home.subcommands.bed.command"));
                 StringUtil.copyPartialMatches(partialCommand, homes, completions);
             }
         }

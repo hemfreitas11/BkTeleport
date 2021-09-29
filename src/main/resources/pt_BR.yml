@@ -116,6 +116,10 @@ commands:
       command: 'home'
       description: 'Nao mude esse comando.'
       usage: '/home <home>'
+    subcommands:
+      bed:
+        command: 'cama'
+        usabe: '/casa cama'
 
   #Homes Command
   homes:
@@ -528,10 +532,12 @@ info:
 
 # *--------------*=/[Mensagem de Erro]\=*---------------*
 error:
+  invalid-bed: '&cVocê não tem uma cama ou o seu local está obstruído.'
   use-setspawn: '&cUse o comando /setspawn para definir o spawn.'
   invalid-spawn: '&eO servidor não definiu um spawn ainda.'
   invalid-last-location: '&cSeu último local não foi encontrado.'
   reserved-name: '&cVocê não pode nomear uma warp "editar".'
+  reserved-home: '&cVocê não pode nomear a home "cama". Este nome está reservado para o local da sua cama.'
   invalid-name: '&cO nome precisa ter pelo menos uma letra ou número. Caractéres especiais serão removidos.'
   input:
     awaiting-input: '&cVocê não pode usar comandos agora. Digite ''{cancel-input}'' para cancelar.'

@@ -9,6 +9,8 @@ import me.bkrmt.bkteleport.BkTeleport;
 import me.bkrmt.bkteleport.HomeType;
 import me.bkrmt.bkteleport.PluginUtils;
 import me.bkrmt.bkteleport.teleportable.Home;
+import me.bkrmt.teleport.Teleport;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -81,14 +83,33 @@ public class HomeCmd extends Executor {
                     sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
                 }
             } else if (args.length == 1) {
-                if (!getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml").exists()) {
-                    sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home").replace("{home-name}", args[0]));
-                } else {
-                    Home home = BkTeleport.getInstance().getHomesManager().getHome(player.getUniqueId(), args[0]);
-                    if (home != null && home.getLocation() != null) {
-                        home.teleportToHome(player);
+                String bedCommand = getPlugin().getLangFile().get("commands.home.subcommands.bed.command");
+                if (args[0].equalsIgnoreCase(bedCommand)) {
+                    Location bedLocation = player.getBedSpawnLocation();
+                    if (bedLocation != null) {
+                        String title = getPlugin().getLangFile().get(player, "info.warped.home.title");
+                        String subTitle = getPlugin().getLangFile().get(player, "info.warped.home.subtitle");
+
+                        new Teleport(getPlugin(), player, getPlugin().getConfigManager().getConfig().getBoolean("teleport-countdown.cancel-on-move"))
+                                .setLocation(bedCommand, bedLocation)
+                                .setTitle(Utils.translateColor(title.replace("{home-name}", Utils.capitalize(bedCommand)).replace("{owner}", player.getName()).replace("{player}", player.getName())))
+                                .setSubtitle(Utils.translateColor(subTitle).replace("{home-name}", Utils.capitalize(bedCommand)).replace("{owner}", player.getName()).replace("{player}", player.getName()))
+                                .setDuration(Utils.intFromPermission(player, 5, "bkteleport.countdown", new String[]{"bkteleport.countdown.0", "bkteleport.admin"}))
+                                .setIsCancellable(true)
+                                .startTeleport();
                     } else {
+                        sender.sendMessage(getPlugin().getLangFile().get(player, "error.invalid-bed"));
+                    }
+                } else {
+                    if (!getPlugin().getFile("userdata", ((Player) sender).getUniqueId().toString() + ".yml").exists()) {
                         sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home").replace("{home-name}", args[0]));
+                    } else {
+                        Home home = BkTeleport.getInstance().getHomesManager().getHome(player.getUniqueId(), args[0]);
+                        if (home != null && home.getLocation() != null) {
+                            home.teleportToHome(player);
+                        } else {
+                            sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home").replace("{home-name}", args[0]));
+                        }
                     }
                 }
             } else if (args.length == 0) {
