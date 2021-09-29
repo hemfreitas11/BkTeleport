@@ -27,10 +27,14 @@ public class TpaAcceptCmd extends Executor {
             if (args.length == 0) {
                 for (Player inviter : getPlugin().getHandler().getMethodManager().getOnlinePlayers()) {
                     ClickableRequest tpHereRequest = ClickableRequest.getInteraction(TpHereCmd.TPHERE_IDENTIFIER, inviter.getUniqueId());
+                    if (tpHereRequest != null && tpHereRequest.getTarget().getUniqueId().equals(requestTarget.getUniqueId())) {
+                        args = new String[]{tpHereRequest.getSender().getName()};
+                        break;
+                    }
+
                     ClickableRequest tpaRequest = ClickableRequest.getInteraction(TpaCmd.TPA_IDENTIFIER, inviter.getUniqueId());
-                    if ((tpHereRequest != null && tpHereRequest.getTarget().getUniqueId().equals(requestTarget.getUniqueId())) ||
-                            (tpaRequest != null && tpaRequest.getTarget().getUniqueId().equals(requestTarget.getUniqueId()))) {
-                        args = new String[]{tpHereRequest == null ? tpaRequest.getSender().getName() : tpHereRequest.getSender().getName()};
+                    if (tpaRequest != null && tpaRequest.getTarget().getUniqueId().equals(requestTarget.getUniqueId())) {
+                        args = new String[]{tpaRequest.getSender().getName()};
                         break;
                     }
                 }
@@ -49,20 +53,20 @@ public class TpaAcceptCmd extends Executor {
                 getPlugin().getServer().getPluginManager().callEvent(replyEvent);
 
                 if (!replyEvent.isCancelled()) {
-                    ClickableRequest tpHereRequest = ClickableRequest.getInteraction(TpHereCmd.TPHERE_IDENTIFIER, requestTarget.getUniqueId());
-                    ClickableRequest tpaRequest = ClickableRequest.getInteraction(TpaCmd.TPA_IDENTIFIER, requestTarget.getUniqueId());
-                    if ((tpHereRequest != null && tpHereRequest.getSender().getUniqueId().equals(requestSender.getUniqueId())) ||
-                            (tpaRequest != null && tpaRequest.getSender().getUniqueId().equals(requestSender.getUniqueId()))) {
+                    ClickableRequest tpHereRequest = ClickableRequest.getInteraction(TpHereCmd.TPHERE_IDENTIFIER, requestSender.getUniqueId(), requestTarget.getUniqueId());
+                    ClickableRequest tpaRequest = ClickableRequest.getInteraction(TpaCmd.TPA_IDENTIFIER, requestSender.getUniqueId(), requestTarget.getUniqueId());
+
+                    if (tpHereRequest != null || tpaRequest != null) {
                         if (TeleportCore.INSTANCE.getPlayersInCooldown().get(requestSender.getName()) == null) {
                             if (TeleportCore.INSTANCE.getPlayersInCooldown().get(requestTarget.getName()) == null) {
                                 requestSender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "info.invite-accepted.self").replace("{player}", requestTarget.getName()));
                                 requestTarget.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "info.invite-accepted.others").replace("{player}", requestSender.getName()));
 
                                 if (tpHereRequest == null) {
-                                    ClickableRequest.removeInteraction(TpaCmd.TPA_IDENTIFIER, requestTarget.getUniqueId());
+                                    ClickableRequest.removeInteraction(TpaCmd.TPA_IDENTIFIER, requestSender.getUniqueId());
                                     startTeleport(requestTarget.getLocation(), requestSender, requestTarget.getName());
                                 } else {
-                                    ClickableRequest.removeInteraction(TpHereCmd.TPHERE_IDENTIFIER, requestTarget.getUniqueId());
+                                    ClickableRequest.removeInteraction(TpHereCmd.TPHERE_IDENTIFIER, requestSender.getUniqueId());
                                     startTeleport(requestSender.getLocation(), requestTarget, requestSender.getName());
                                 }
                             } else {

@@ -24,10 +24,10 @@ public class TpHereCmd extends Executor {
             sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.no-permission"));
         } else {
             if (args.length == 1) {
-                if (!(getPlugin().getServer().getPlayer(args[0]) == null)) {
+                Player targetPlayer = getPlugin().getServer().getPlayer(args[0]);
+                if (targetPlayer != null) {
                     if (TeleportCore.INSTANCE.getPlayersInCooldown().get(sender.getName()) == null) {
                         Player senderPlayer = ((Player) sender);
-                        Player targetPlayer = getPlugin().getServer().getPlayer(args[0]);
                         if (!senderPlayer.equals(targetPlayer)) {
                             ClickableRequest senderRequest = ClickableRequest.getInteraction(TPHERE_IDENTIFIER, senderPlayer.getUniqueId());
                             if (senderRequest == null) {

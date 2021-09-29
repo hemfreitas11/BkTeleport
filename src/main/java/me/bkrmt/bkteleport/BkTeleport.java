@@ -9,6 +9,7 @@ import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.command.MainCommand;
 import me.bkrmt.bkcore.config.ConfigType;
 import me.bkrmt.bkcore.config.Configuration;
+import me.bkrmt.bkcore.config.InvalidLocationException;
 import me.bkrmt.bkcore.guiconfig.GUIConfig;
 import me.bkrmt.bkcore.textanimator.AnimatorManager;
 import me.bkrmt.bkteleport.commands.BackCmd;
@@ -155,7 +156,12 @@ public final class BkTeleport extends BkPlugin {
                         );
                     } else {
                         Configuration spawnConfig = new Configuration(plugin, spawnFile);
-                        Location spawnLocation = spawnConfig.getLocation("");
+                        Location spawnLocation = null;
+                        try {
+                            spawnLocation = spawnConfig.getLocation("");
+                        } catch (InvalidLocationException e) {
+                            e.printStackTrace();
+                        }
                         if (spawnLocation != null) {
                             event.setSpawnLocation(spawnLocation);
                         } else {
@@ -179,7 +185,12 @@ public final class BkTeleport extends BkPlugin {
                         player.sendMessage(plugin.getLangFile().get(player, "error.invalid-spawn"));
                     } else {
                         Configuration spawnConfig = new Configuration(plugin, spawnFile);
-                        Location spawnLocation = spawnConfig.getLocation("");
+                        Location spawnLocation = null;
+                        try {
+                            spawnLocation = spawnConfig.getLocation("");
+                        } catch (InvalidLocationException e) {
+                            e.printStackTrace();
+                        }
                         if (spawnLocation != null) {
                             event.setRespawnLocation(spawnLocation);
                         } else {

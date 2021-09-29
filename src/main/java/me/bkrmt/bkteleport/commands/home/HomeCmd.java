@@ -4,6 +4,7 @@ import me.bkrmt.bkcore.BkPlugin;
 import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.config.Configuration;
+import me.bkrmt.bkcore.config.InvalidLocationException;
 import me.bkrmt.bkteleport.BkTeleport;
 import me.bkrmt.bkteleport.HomeType;
 import me.bkrmt.bkteleport.PluginUtils;
@@ -60,7 +61,11 @@ public class HomeCmd extends Executor {
                         if (getPlugin().getFile("userdata", spiedFile).exists()) {
                             Configuration spyConfigFile = getPlugin().getConfigManager().getConfig("userdata", spiedFile);
                             if (spyConfigFile.get("homes." + spy[1]) != null) {
-                                ((Player) sender).teleport(spyConfigFile.getLocation("homes." + spy[1]));
+                                try {
+                                    ((Player) sender).teleport(spyConfigFile.getLocation("homes." + spy[1]));
+                                } catch (InvalidLocationException e) {
+                                    e.printStackTrace();
+                                }
                             } else {
                                 sender.sendMessage(getPlugin().getLangFile().get((OfflinePlayer) sender, "error.unknown-home-spy").replace("{player}", spy[0]).replace("{home-name}", spy[1]));
                             }

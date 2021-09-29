@@ -5,6 +5,7 @@ import me.bkrmt.bkcore.Utils;
 import me.bkrmt.bkcore.command.Executor;
 import me.bkrmt.bkcore.config.ConfigType;
 import me.bkrmt.bkcore.config.Configuration;
+import me.bkrmt.bkcore.config.InvalidLocationException;
 import me.bkrmt.teleport.Teleport;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -31,7 +32,12 @@ public class BackCmd extends Executor {
             } else {
                 Configuration userDataConfig = new Configuration(getPlugin(), userDataFile, ConfigType.PLAYER_DATA);
                 if (userDataConfig.get("lastlocation") != null) {
-                    Location lastLocation = userDataConfig.getLocation("lastlocation");
+                    Location lastLocation = null;
+                    try {
+                        lastLocation = userDataConfig.getLocation("lastlocation");
+                    } catch (InvalidLocationException e) {
+                        e.printStackTrace();
+                    }
                     if (lastLocation != null) {
                         new Teleport(getPlugin(), player, getPlugin().getConfigManager().getConfig().getBoolean("teleport-countdown.cancel-on-move"))
                                 .setLocation("last-location", lastLocation)

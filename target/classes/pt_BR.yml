@@ -561,8 +561,9 @@ error:
   invite-denied: '&cO seu pedido de teleporte para &4{player} &cfoi recusado.'
   cant-invite-self: '&cVoce nao pode mandar um convite de teleporte para voce mesmo.'
   cant-invite-again: '&cVoce ja mandou um convite para esse jogador.'
-  invite-expired: '&cO pedido de teleporte de &4{player} &cexpirou.'
-  invite-expired-self: '&cO pedido de teleporte para &4{player} &cexpirou.'
+  ired:
+    self: '&cO pedido de teleporte de &4{player} &cexpirou.'
+    others: '&cO pedido de teleporte para &4{player} &cexpirou.'
   cant-attack-now:
     self: '&cVoce nao pode atacar por mais {seconds} segundos!'
     others: '&cEsse jogador nao pode ser atacado por mais {seconds} segundos!'
